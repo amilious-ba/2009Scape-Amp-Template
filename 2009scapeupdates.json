@@ -22,5 +22,13 @@
         "UpdateSource": "Executable",
         "UpdateSourceData": "/bin/bash",
         "UpdateSourceArgs": "-c \"set -e; echo '=== Git LFS + Build ==='; cd 2009scape; git lfs install; git lfs pull; mkdir -p builddir ../config; if [ ! -f ../config/default.conf ]; then echo 'Creating protected config (first run)'; cp -f Server/worldprops/default.conf ../config/default.conf; else echo 'Protected config already exists'; fi; NEED_BUILD=0; if [ ! -f builddir/server.jar ]; then echo 'No server.jar - will build'; NEED_BUILD=1; fi; if [ -f ../.needs_rebuild ]; then echo 'Source changed - will rebuild'; NEED_BUILD=1; rm -f ../.needs_rebuild; fi; if [ \\\"$NEED_BUILD\\\" = \\\"1\\\" ]; then echo 'Running Maven build...'; cd Server; chmod +x mvnw; export JAVA_HOME=/usr/lib/jvm/temurin-11-jdk-amd64; export PATH=\\\"$JAVA_HOME/bin:$PATH\\\"; ./mvnw clean package -DskipTests; JAR=$(find target -name '*-jar-with-dependencies.jar' -o -name 'server*.jar' 2>/dev/null | head -n1); if [ -z \\\"$JAR\\\" ]; then echo 'ERROR: No jar found'; ls -la target/ || true; exit 1; fi; cp -f \\\"$JAR\\\" ../builddir/server.jar; echo 'Build complete'; ls -la ../builddir/; else echo 'No source changes and jar exists - skipping Maven build'; ls -la builddir/server.jar; fi; echo '=== LFS + Build finished ==='\""
+    },
+    {
+        "UpdateStageName": "Install Config Helper",
+        "UpdateStageDescription": "Install script that applies AMP UI settings to TOML config",
+        "UpdateSourcePlatform": "Linux",
+        "UpdateSource": "Executable",
+        "UpdateSourceData": "/bin/bash",
+        "UpdateSourceArgs": "-c \"mkdir -p config; cat > apply-config.sh << 'SCRIPT'\n#!/bin/bash\n# Apply key=value into [section] of a TOML-like file without destroying the rest\nCONF=\\\"${1:-config/default.conf}\\\"\nshift\n[ -f \\\"$CONF\\\" ] || { echo \\\"Config not found: $CONF\\\"; exit 1; }\nwhile [ \\$# -ge 3 ]; do\n  KEY=\\\"$1\\\"; VAL=\\\"$2\\\"; SEC=\\\"$3\\\"; shift 3\n  case \\\"$VAL\\\" in\n    true|True|TRUE) VAL=true ;;\n    false|False|FALSE) VAL=false ;;\n  esac\n  case \\\"$VAL\\\" in\n    true|false|[0-9]*) Q=\\\"$VAL\\\" ;;\n    *) Q=\\\"\\\\\\\"$VAL\\\\\\\"\\\" ;;\n  esac\n  awk -v sec=\\\"$SEC\\\" -v key=\\\"$KEY\\\" -v q=\\\"$Q\\\" '\n    BEGIN { insec=0 }\n    /^\\[/ { insec = ($0 == \\\"[\\\" sec \\\"]\\\") }\n    insec && $0 ~ (\\\"^[[:space:]]*\\\" key \\\"[[:space:]]*=\\\") {\n      print key \\\" = \\\" q\n      next\n    }\n    { print }\n  ' \\\"$CONF\\\" > \\\"$CONF.tmp\\\" && mv \\\"$CONF.tmp\\\" \\\"$CONF\\\"\ndone\nSCRIPT\nchmod +x apply-config.sh\necho 'Installed apply-config.sh'\n\""
     }
 ]

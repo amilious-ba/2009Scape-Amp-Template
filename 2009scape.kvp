@@ -21,8 +21,8 @@ Meta.Prerequisites=[]
 Meta.ExtraContainerPackages=[]
 Meta.ConfigReleaseState=NotSpecified
 Meta.NoCommercialUsage=False
-Meta.ConfigVersion=19
-Meta.ReleaseNotes=Metaconfig AutoMap false + explicit subsections + format regex
+Meta.ConfigVersion=21
+Meta.ReleaseNotes=AMP UI settings applied via apply-config.sh on start (TOML-safe)
 Meta.BreakingReleaseNotes=
 Meta.AppConfigId=37269599-5087-4b2d-8eb2-a504376f2c42
 Meta.ImportableExtensions=[]
@@ -34,11 +34,33 @@ App.StoresSupported=None
 App.StoreSpecificSettings={}
 App.StoreDownloadLocations={}
 App.ExecutableWin=
-App.ExecutableLinux=/usr/lib/jvm/temurin-11-jdk-amd64/bin/java
+App.ExecutableLinux=/bin/bash
 App.WorkingDir=2009scape/Server
 App.LinuxCommandLineArgs=
 App.WindowsCommandLineArgs=
-App.CommandLineArgs=-Dnashorn.args=--no-deprecation-warning -jar ../builddir/server.jar ../../config/default.conf
+App.CommandLineArgs=-c "ROOT=../..; CONF=$ROOT/config/default.conf; APPLY=$ROOT/apply-config.sh; if [ -x "$APPLY" ]; then   "$APPLY" "$CONF"     name "{{WorldName}}" world     world_id "{{WorldId}}" world     members "{{Members}}" world     activity "{{Activity}}" world     pvp "{{Pvp}}" world     wild_pvp_enabled "{{WildPvp}}" world     enable_bots "{{EnableBots}}" world     debug "{{Debug}}" world     dev "{{Dev}}" world     xp_rates "{{XpRates}}" world     ironman "{{Ironman}}" world     player_commands "{{PlayerCommands}}" world     i_want_to_cheat "{{IWantToCheat}}" world     skillcape_perks "{{SkillcapePerks}}" world     second_bank "{{SecondBank}}" world     enable_global_chat "{{EnableGlobalChat}}" world     log_level "{{LogLevel}}" server     secret_key "{{SecretKey}}" server     use_auth "{{UseAuth}}" server     persist_accounts "{{PersistAccounts}}" server     noauth_default_admin "{{NoAuthDefaultAdmin}}" server     watchdog_enabled "{{WatchdogEnabled}}" server     connectivity_timeout "{{ConnectivityTimeout}}" server     preload_map "{{PreloadMap}}" server     database_name "{{DatabaseName}}" database     database_username "{{DatabaseUsername}}" database     database_password "{{DatabasePassword}}" database     database_address "{{DatabaseAddress}}" database     database_port "{{DatabasePort}}" database; fi; exec /usr/lib/jvm/temurin-11-jdk-amd64/bin/java -Dnashorn.args=--no-deprecation-warning -jar ../builddir/server.jar $CONF"
+if echo \"$val\" | grep -Eq '^(true|false|[0-9]+([.][0-9]+)?)$'; then qval=\"$val\"; else qval=$(printf '%s' \"$val\" | sed 's/\"/\\\"/g'); qval=\"\\"$qval\\"\"; fi
+python3 - \"$CONF\" \"$section\" \"$key\" \"$qval\" <<'PY'
+import sys,re
+path,section,key,qval=sys.argv[1:5]
+text=open(path,encoding='utf-8').read()
+# find [section] block
+pat=re.compile(r'(?m)^\['+re.escape(section)+r'\][^\[]*')
+m=pat.search(text)
+if not m:
+    sys.exit(0)
+block=m.group(0)
+# replace key = ... line inside block
+nblock,replacements=re.subn(r'(?m)^(\s*)'+re.escape(key)+r'\s*=\s*.*$', r'\1'+key+' = '+qval, block, count=1)
+if replacements==0:
+    # append before end of block
+    nblock=block.rstrip()+'
+'+key+' = '+qval+'
+'
+text=text[:m.start()]+nblock+text[m.end():]
+open(path,'w',encoding='utf-8').write(text)
+PY
+}; set_toml name \"{{WorldName}}\" world; set_toml world_id \"{{WorldId}}\" world; set_toml members \"{{Members}}\" world; set_toml activity \"{{Activity}}\" world; set_toml pvp \"{{Pvp}}\" world; set_toml wild_pvp_enabled \"{{WildPvp}}\" world; set_toml enable_bots \"{{EnableBots}}\" world; set_toml debug \"{{Debug}}\" world; set_toml dev \"{{Dev}}\" world; set_toml xp_rates \"{{XpRates}}\" world; set_toml ironman \"{{Ironman}}\" world; set_toml player_commands \"{{PlayerCommands}}\" world; set_toml i_want_to_cheat \"{{IWantToCheat}}\" world; set_toml skillcape_perks \"{{SkillcapePerks}}\" world; set_toml second_bank \"{{SecondBank}}\" world; set_toml enable_global_chat \"{{EnableGlobalChat}}\" world; set_toml log_level \"{{LogLevel}}\" server; set_toml secret_key \"{{SecretKey}}\" server; set_toml use_auth \"{{UseAuth}}\" server; set_toml persist_accounts \"{{PersistAccounts}}\" server; set_toml noauth_default_admin \"{{NoAuthDefaultAdmin}}\" server; set_toml watchdog_enabled \"{{WatchdogEnabled}}\" server; set_toml connectivity_timeout \"{{ConnectivityTimeout}}\" server; set_toml preload_map \"{{PreloadMap}}\" server; set_toml database_name \"{{DatabaseName}}\" database; set_toml database_username \"{{DatabaseUsername}}\" database; set_toml database_password \"{{DatabasePassword}}\" database; set_toml database_address \"{{DatabaseAddress}}\" database; set_toml database_port \"{{DatabasePort}}\" database; exec /usr/lib/jvm/temurin-11-jdk-amd64/bin/java -Dnashorn.args=--no-deprecation-warning -jar ../builddir/server.jar \"$CONF\""
 App.UseLinuxIOREDIR=False
 App.AppSettings={}
 App.EnvironmentVariables={}
