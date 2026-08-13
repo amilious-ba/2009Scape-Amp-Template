@@ -2,52 +2,53 @@
     {
         "ConfigFile": "config/default.conf",
         "ConfigType": "ini",
-        "AutoMap": true,
+        "AutoMap": false,
         "Importable": true,
         "ConfigFormat": "{0} = {1}",
+        "ConfigFormatRegex": "^(?<key>[^=]+?)\\s*=\\s*(?<value>.*?)$",
         "Subsections": [
             {
                 "Heading": "server",
                 "SettingMappings": {
-                    "LogLevel": "log_level",
-                    "SecretKey": "secret_key",
-                    "UseAuth": "use_auth",
-                    "PersistAccounts": "persist_accounts",
-                    "NoAuthDefaultAdmin": "noauth_default_admin",
-                    "WatchdogEnabled": "watchdog_enabled",
-                    "ConnectivityTimeout": "connectivity_timeout",
-                    "PreloadMap": "preload_map"
+                    "log_level": "LogLevel",
+                    "secret_key": "SecretKey",
+                    "use_auth": "UseAuth",
+                    "persist_accounts": "PersistAccounts",
+                    "noauth_default_admin": "NoAuthDefaultAdmin",
+                    "watchdog_enabled": "WatchdogEnabled",
+                    "connectivity_timeout": "ConnectivityTimeout",
+                    "preload_map": "PreloadMap"
                 }
             },
             {
                 "Heading": "database",
                 "SettingMappings": {
-                    "DatabaseName": "database_name",
-                    "DatabaseUsername": "database_username",
-                    "DatabasePassword": "database_password",
-                    "DatabaseAddress": "database_address",
-                    "DatabasePort": "database_port"
+                    "database_name": "DatabaseName",
+                    "database_username": "DatabaseUsername",
+                    "database_password": "DatabasePassword",
+                    "database_address": "DatabaseAddress",
+                    "database_port": "DatabasePort"
                 }
             },
             {
                 "Heading": "world",
                 "SettingMappings": {
-                    "WorldName": "name",
-                    "WorldId": "world_id",
-                    "Members": "members",
-                    "Activity": "activity",
-                    "Pvp": "pvp",
-                    "WildPvp": "wild_pvp_enabled",
-                    "EnableBots": "enable_bots",
-                    "Debug": "debug",
-                    "Dev": "dev",
-                    "XpRates": "xp_rates",
-                    "Ironman": "ironman",
-                    "PlayerCommands": "player_commands",
-                    "IWantToCheat": "i_want_to_cheat",
-                    "SkillcapePerks": "skillcape_perks",
-                    "SecondBank": "second_bank",
-                    "EnableGlobalChat": "enable_global_chat"
+                    "name": "WorldName",
+                    "world_id": "WorldId",
+                    "members": "Members",
+                    "activity": "Activity",
+                    "pvp": "Pvp",
+                    "wild_pvp_enabled": "WildPvp",
+                    "enable_bots": "EnableBots",
+                    "debug": "Debug",
+                    "dev": "Dev",
+                    "xp_rates": "XpRates",
+                    "ironman": "Ironman",
+                    "player_commands": "PlayerCommands",
+                    "i_want_to_cheat": "IWantToCheat",
+                    "skillcape_perks": "SkillcapePerks",
+                    "second_bank": "SecondBank",
+                    "enable_global_chat": "EnableGlobalChat"
                 }
             }
         ]
