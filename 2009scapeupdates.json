@@ -1,11 +1,11 @@
 [
     {
         "UpdateStageName": "Prerequisites",
-        "UpdateStageDescription": "Check and install Git, Git LFS, and Java 11 if missing",
+        "UpdateStageDescription": "Verify Git, Git LFS and Java 11 are available",
         "UpdateSourcePlatform": "Linux",
         "UpdateSource": "Executable",
         "UpdateSourceData": "/bin/bash",
-        "UpdateSourceArgs": "-c \"set -e; echo '=== 2009Scape Prerequisites ==='; if ! command -v git >/dev/null 2>&1; then echo 'Git missing → installing...'; (sudo apt-get update -qq && sudo apt-get install -y -qq git) || (apt-get update -qq && apt-get install -y -qq git) || echo 'WARNING: Could not install Git'; else echo 'Git OK'; fi; if ! command -v git-lfs >/dev/null 2>&1; then echo 'Git LFS missing → installing...'; (sudo apt-get install -y -qq git-lfs) || (apt-get install -y -qq git-lfs) || echo 'WARNING: Could not install Git LFS'; else echo 'Git LFS OK'; fi; git lfs install || true; JAVA11=false; if command -v java >/dev/null 2>&1; then VER=$(java -version 2>&1 | head -n1); echo Found: $VER; if echo \\\"$VER\\\" | grep -q 'version \\\"11'; then JAVA11=true; fi; fi; if [ \\\"$JAVA11\\\" = false ]; then echo 'Java 11 not found → trying install...'; if command -v getamp >/dev/null 2>&1; then getamp installJava || echo 'getamp installJava failed'; else (sudo apt-get install -y -qq temurin-11-jdk) || (apt-get install -y -qq openjdk-11-jdk) || echo 'WARNING: Could not install Java 11'; fi; else echo 'Java 11 OK'; fi; echo '=== Prerequisites finished ==='\""
+        "UpdateSourceArgs": "-c \"set -e; echo '=== 2009Scape Prerequisites Check ==='; MISSING=0; if ! command -v git >/dev/null 2>&1; then echo 'ERROR: git is not installed'; MISSING=1; else echo 'Git OK'; fi; if ! command -v git-lfs >/dev/null 2>&1; then echo 'ERROR: git-lfs is not installed'; MISSING=1; else echo 'Git LFS OK'; fi; if [ ! -x /usr/lib/jvm/temurin-11-jdk-amd64/bin/java ]; then echo 'ERROR: Java 11 (temurin-11-jdk-amd64) not found at expected path'; MISSING=1; else echo 'Java 11 OK'; /usr/lib/jvm/temurin-11-jdk-amd64/bin/java -version 2>&1 | head -n1; fi; if [ $MISSING -ne 0 ]; then echo ''; echo 'One or more required packages are missing.'; echo 'Please run the following on the host as root, then try Update again:'; echo ''; echo '  sudo apt-get update'; echo '  sudo apt-get install -y git git-lfs temurin-11-jdk'; echo ''; echo 'If temurin-11-jdk is not available, use: sudo apt-get install -y openjdk-11-jdk'; echo 'and update the Java path in the template if needed.'; exit 1; fi; echo '=== All prerequisites satisfied ==='\""
     },
     {
         "UpdateStageName": "Clone Repository",
