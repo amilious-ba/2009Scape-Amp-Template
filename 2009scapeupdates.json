@@ -4,7 +4,7 @@
         "UpdateStageDescription": "Check and install Git, Git LFS, and Java 11 if missing",
         "UpdateSourcePlatform": "Linux",
         "UpdateSource": "Bash",
-        "UpdateSourceArgs": "#!/bin/bash\nset -e\necho \"=== 2009Scape Prerequisites ===\"\n\n# --- Git ---\nif ! command -v git >/dev/null 2>&1; then\n  echo \"Git missing → installing...\"\n  (sudo apt-get update -qq && sudo apt-get install -y -qq git) || \\\n  (apt-get update -qq && apt-get install -y -qq git) || \\\n  echo \"WARNING: Could not install Git\"\nelse\n  echo \"Git OK\"\nfi\n\n# --- Git LFS ---\nif ! command -v git-lfs >/dev/null 2>&1; then\n  echo \"Git LFS missing → installing...\"\n  (sudo apt-get install -y -qq git-lfs) || \\\n  (apt-get install -y -qq git-lfs) || \\\n  echo \"WARNING: Could not install Git LFS\"\nelse\n  echo \"Git LFS OK\"\nfi\ngit lfs install || true\n\n# --- Java 11 ---\nJAVA11=false\nif command -v java >/dev/null 2>&1; then\n  VER=$(java -version 2>&1 | head -n1)\n  echo \"Found: $VER\"\n  if echo \"$VER\" | grep -q 'version \"11'; then\n    JAVA11=true\n  fi\nfi\n\nif [ \"$JAVA11\" = false ]; then\n  echo \"Java 11 not found → trying AMP method...\"\n  if command -v getamp >/dev/null 2>&1; then\n    getamp installJava || echo \"getamp installJava failed (may need root)\"\n  else\n    echo \"getamp not found → trying apt...\"\n    (sudo apt-get install -y -qq temurin-11-jdk) || \\\n    (apt-get install -y -qq openjdk-11-jdk) || \\\n    echo \"WARNING: Could not install Java 11\"\n  fi\nelse\n  echo \"Java 11 OK\"\nfi\n\necho \"=== Prerequisites finished ===\""
+        "UpdateSourceArgs": "#!/bin/bash\nset -e\necho \"=== 2009Scape Prerequisites ===\"\n\nif ! command -v git >/dev/null 2>&1; then\n  echo \"Git missing → installing...\"\n  (sudo apt-get update -qq && sudo apt-get install -y -qq git) || (apt-get update -qq && apt-get install -y -qq git) || echo \"WARNING: Could not install Git\"\nelse\n  echo \"Git OK\"\nfi\n\nif ! command -v git-lfs >/dev/null 2>&1; then\n  echo \"Git LFS missing → installing...\"\n  (sudo apt-get install -y -qq git-lfs) || (apt-get install -y -qq git-lfs) || echo \"WARNING: Could not install Git LFS\"\nelse\n  echo \"Git LFS OK\"\nfi\ngit lfs install || true\n\nJAVA11=false\nif command -v java >/dev/null 2>&1; then\n  VER=$(java -version 2>&1 | head -n1)\n  echo \"Found: $VER\"\n  if echo \"$VER\" | grep -q 'version \"11'; then JAVA11=true; fi\nfi\n\nif [ \"$JAVA11\" = false ]; then\n  echo \"Java 11 not found → trying install...\"\n  if command -v getamp >/dev/null 2>&1; then\n    getamp installJava || echo \"getamp installJava failed\"\n  else\n    (sudo apt-get install -y -qq temurin-11-jdk) || (apt-get install -y -qq openjdk-11-jdk) || echo \"WARNING: Could not install Java 11\"\n  fi\nelse\n  echo \"Java 11 OK\"\nfi\n\necho \"=== Prerequisites finished ===\""
     },
     {
         "UpdateStageName": "Clone Repository",
@@ -15,17 +15,10 @@
         "UpdateSourceTarget": "2009scape"
     },
     {
-        "UpdateStageName": "Git LFS Pull",
-        "UpdateStageDescription": "Pull large files with Git LFS",
+        "UpdateStageName": "LFS and Build",
+        "UpdateStageDescription": "Pull LFS files and compile the server with Maven, then place jar in builddir",
         "UpdateSourcePlatform": "Linux",
         "UpdateSource": "Bash",
-        "UpdateSourceArgs": "#!/bin/bash\nset -e\necho \"=== Git LFS Pull ===\"\ncd 2009scape\ngit lfs install\ngit lfs pull\necho \"=== LFS Pull finished ===\""
-    },
-    {
-        "UpdateStageName": "Build Server",
-        "UpdateStageDescription": "Compile the 2009Scape server with Maven",
-        "UpdateSourcePlatform": "Linux",
-        "UpdateSource": "Bash",
-        "UpdateSourceArgs": "#!/bin/bash\nset -e\necho \"=== Building 2009Scape Server ===\"\ncd 2009scape/Server\nchmod +x mvnw\n./mvnw clean package -DskipTests\necho \"=== Build finished ===\""
+        "UpdateSourceArgs": "#!/bin/bash\nset -e\necho \"=== Git LFS + Build ===\"\n\ncd 2009scape\ngit lfs install\ngit lfs pull\n\necho \"Running Maven build...\"\ncd Server\nchmod +x mvnw\nexport JAVA_HOME=/usr/lib/jvm/temurin-11-jdk-amd64\nexport PATH=\"$JAVA_HOME/bin:$PATH\"\n./mvnw clean package -DskipTests\n\necho \"Locating jar...\"\nmkdir -p ../builddir\nJAR=$(find target -name \"*-jar-with-dependencies.jar\" -o -name \"server*.jar\" 2>/dev/null | head -n1)\nif [ -z \"$JAR\" ]; then\n  echo \"ERROR: No jar found in target/\"\n  ls -la target/ || true\n  exit 1\nfi\n\necho \"Copying $JAR → ../builddir/server.jar\"\ncp -f \"$JAR\" ../builddir/server.jar\nls -la ../builddir/\necho \"=== LFS + Build finished ===\""
     }
 ]
