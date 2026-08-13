@@ -9,11 +9,11 @@
     },
     {
         "UpdateStageName": "Clone Repository",
-        "UpdateStageDescription": "Clone or update the 2009Scape source from GitLab",
+        "UpdateStageDescription": "Clone or update 2009Scape (shallow + retries)",
         "UpdateSourcePlatform": "Linux",
-        "UpdateSource": "GitRepo",
-        "UpdateSourceData": "https://gitlab.com/2009scape/2009scape.git",
-        "UpdateSourceTarget": "2009scape"
+        "UpdateSource": "Executable",
+        "UpdateSourceData": "/bin/bash",
+        "UpdateSourceArgs": "-c \"set -e; echo '=== Cloning 2009Scape ==='; export GIT_HTTP_LOW_SPEED_LIMIT=1000; export GIT_HTTP_LOW_SPEED_TIME=600; git config --global http.postBuffer 524288000; git config --global http.version HTTP/1.1; if [ -d 2009scape/.git ]; then echo 'Repo exists - fetching updates...'; cd 2009scape; git fetch --depth 1 origin master || git fetch origin master; git reset --hard origin/master; git clean -fd; else echo 'Fresh shallow clone...'; for i in 1 2 3; do echo Attempt $i...; if git clone --depth 1 --branch master https://gitlab.com/2009scape/2009scape.git 2009scape; then break; fi; echo 'Clone failed, retrying in 5s...'; rm -rf 2009scape; sleep 5; if [ $i -eq 3 ]; then echo 'All clone attempts failed'; exit 1; fi; done; fi; echo '=== Clone finished ==='\""
     },
     {
         "UpdateStageName": "LFS and Build",
