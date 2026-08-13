@@ -4,6 +4,42 @@
         "ConfigType": "kvp",
         "AutoMap": true,
         "Importable": true,
-        "ConfigFormat": "{0}={1}"
+        "ConfigFormat": "{0}={1}",
+        "Subsections": [
+            {
+                "Heading": "$root",
+                "SettingMappings": {
+                    "WorldName": "WorldName",
+                    "WorldId": "WorldId",
+                    "Members": "Members",
+                    "Activity": "Activity",
+                    "Pvp": "Pvp",
+                    "WildPvp": "WildPvp",
+                    "EnableBots": "EnableBots",
+                    "Debug": "Debug",
+                    "Dev": "Dev",
+                    "XpRates": "XpRates",
+                    "Ironman": "Ironman",
+                    "PlayerCommands": "PlayerCommands",
+                    "IWantToCheat": "IWantToCheat",
+                    "SkillcapePerks": "SkillcapePerks",
+                    "SecondBank": "SecondBank",
+                    "EnableGlobalChat": "EnableGlobalChat",
+                    "LogLevel": "LogLevel",
+                    "SecretKey": "SecretKey",
+                    "UseAuth": "UseAuth",
+                    "PersistAccounts": "PersistAccounts",
+                    "NoAuthDefaultAdmin": "NoAuthDefaultAdmin",
+                    "WatchdogEnabled": "WatchdogEnabled",
+                    "ConnectivityTimeout": "ConnectivityTimeout",
+                    "PreloadMap": "PreloadMap",
+                    "DatabaseName": "DatabaseName",
+                    "DatabaseUsername": "DatabaseUsername",
+                    "DatabasePassword": "DatabasePassword",
+                    "DatabaseAddress": "DatabaseAddress",
+                    "DatabasePort": "DatabasePort"
+                }
+            }
+        ]
     }
 ]
