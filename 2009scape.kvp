@@ -21,8 +21,8 @@ Meta.Prerequisites=[]
 Meta.ExtraContainerPackages=[]
 Meta.ConfigReleaseState=NotSpecified
 Meta.NoCommercialUsage=False
-Meta.ConfigVersion=21
-Meta.ReleaseNotes=AMP UI settings applied via apply-config.sh on start (TOML-safe)
+Meta.ConfigVersion=22
+Meta.ReleaseNotes=UI writes amp-settings.cfg; start script merges into TOML safely
 Meta.BreakingReleaseNotes=
 Meta.AppConfigId=37269599-5087-4b2d-8eb2-a504376f2c42
 Meta.ImportableExtensions=[]
@@ -35,10 +35,10 @@ App.StoreSpecificSettings={}
 App.StoreDownloadLocations={}
 App.ExecutableWin=
 App.ExecutableLinux=/bin/bash
-App.WorkingDir=2009scape/Server
+App.WorkingDir=.
 App.LinuxCommandLineArgs=
 App.WindowsCommandLineArgs=
-App.CommandLineArgs=-c "ROOT=../..; CONF=$ROOT/config/default.conf; APPLY=$ROOT/apply-config.sh; if [ -x "$APPLY" ]; then   "$APPLY" "$CONF"     name "{{WorldName}}" world     world_id "{{WorldId}}" world     members "{{Members}}" world     activity "{{Activity}}" world     pvp "{{Pvp}}" world     wild_pvp_enabled "{{WildPvp}}" world     enable_bots "{{EnableBots}}" world     debug "{{Debug}}" world     dev "{{Dev}}" world     xp_rates "{{XpRates}}" world     ironman "{{Ironman}}" world     player_commands "{{PlayerCommands}}" world     i_want_to_cheat "{{IWantToCheat}}" world     skillcape_perks "{{SkillcapePerks}}" world     second_bank "{{SecondBank}}" world     enable_global_chat "{{EnableGlobalChat}}" world     log_level "{{LogLevel}}" server     secret_key "{{SecretKey}}" server     use_auth "{{UseAuth}}" server     persist_accounts "{{PersistAccounts}}" server     noauth_default_admin "{{NoAuthDefaultAdmin}}" server     watchdog_enabled "{{WatchdogEnabled}}" server     connectivity_timeout "{{ConnectivityTimeout}}" server     preload_map "{{PreloadMap}}" server     database_name "{{DatabaseName}}" database     database_username "{{DatabaseUsername}}" database     database_password "{{DatabasePassword}}" database     database_address "{{DatabaseAddress}}" database     database_port "{{DatabasePort}}" database; fi; exec /usr/lib/jvm/temurin-11-jdk-amd64/bin/java -Dnashorn.args=--no-deprecation-warning -jar ../builddir/server.jar $CONF"
+App.CommandLineArgs=./apply-and-start.sh
 if echo \"$val\" | grep -Eq '^(true|false|[0-9]+([.][0-9]+)?)$'; then qval=\"$val\"; else qval=$(printf '%s' \"$val\" | sed 's/\"/\\\"/g'); qval=\"\\"$qval\\"\"; fi
 python3 - \"$CONF\" \"$section\" \"$key\" \"$qval\" <<'PY'
 import sys,re
