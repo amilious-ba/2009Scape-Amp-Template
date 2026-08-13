@@ -21,8 +21,8 @@ Meta.Prerequisites=[]
 Meta.ExtraContainerPackages=[]
 Meta.ConfigReleaseState=NotSpecified
 Meta.NoCommercialUsage=False
-Meta.ConfigVersion=8
-Meta.ReleaseNotes=Robust shallow clone with retries + increased Git buffers
+Meta.ConfigVersion=10
+Meta.ReleaseNotes=Protected config outside git tree + passed as startup arg
 Meta.BreakingReleaseNotes=
 Meta.AppConfigId=37269599-5087-4b2d-8eb2-a504376f2c42
 Meta.ImportableExtensions=[]
@@ -35,10 +35,10 @@ App.StoreSpecificSettings={}
 App.StoreDownloadLocations={}
 App.ExecutableWin=
 App.ExecutableLinux=/usr/lib/jvm/temurin-11-jdk-amd64/bin/java
-App.WorkingDir=2009scape
+App.WorkingDir=2009scape/Server
 App.LinuxCommandLineArgs=
 App.WindowsCommandLineArgs=
-App.CommandLineArgs=-Dnashorn.args=--no-deprecation-warning -jar builddir/server.jar
+App.CommandLineArgs=-Dnashorn.args=--no-deprecation-warning -jar ../builddir/server.jar ../../config/default.conf
 App.UseLinuxIOREDIR=False
 App.AppSettings={}
 App.EnvironmentVariables={}

@@ -1,1 +1,8 @@
-[]
+[
+    {
+        "ConfigurationFile": "config/default.conf",
+        "ConfigurationType": "ini",
+        "AutoMap": true,
+        "Importable": true
+    }
+]

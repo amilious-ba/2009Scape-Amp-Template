@@ -17,10 +17,10 @@
     },
     {
         "UpdateStageName": "LFS and Build",
-        "UpdateStageDescription": "Pull LFS files and compile the server with Maven, then place jar in builddir",
+        "UpdateStageDescription": "Pull LFS, build server, protect config, place jar",
         "UpdateSourcePlatform": "Linux",
         "UpdateSource": "Executable",
         "UpdateSourceData": "/bin/bash",
-        "UpdateSourceArgs": "-c \"set -e; echo '=== Git LFS + Build ==='; cd 2009scape; git lfs install; git lfs pull; echo 'Running Maven build...'; cd Server; chmod +x mvnw; export JAVA_HOME=/usr/lib/jvm/temurin-11-jdk-amd64; export PATH=\\\"$JAVA_HOME/bin:$PATH\\\"; ./mvnw clean package -DskipTests; echo 'Locating jar...'; mkdir -p ../builddir; JAR=$(find target -name '*-jar-with-dependencies.jar' -o -name 'server*.jar' 2>/dev/null | head -n1); if [ -z \\\"$JAR\\\" ]; then echo 'ERROR: No jar found in target/'; ls -la target/ || true; exit 1; fi; echo Copying $JAR to ../builddir/server.jar; cp -f \\\"$JAR\\\" ../builddir/server.jar; ls -la ../builddir/; echo '=== LFS + Build finished ==='\""
+        "UpdateSourceArgs": "-c \"set -e; echo '=== Git LFS + Build ==='; cd 2009scape; git lfs install; git lfs pull; echo 'Running Maven build...'; cd Server; chmod +x mvnw; export JAVA_HOME=/usr/lib/jvm/temurin-11-jdk-amd64; export PATH=\\\"$JAVA_HOME/bin:$PATH\\\"; ./mvnw clean package -DskipTests; echo 'Locating jar...'; mkdir -p ../builddir; JAR=$(find target -name '*-jar-with-dependencies.jar' -o -name 'server*.jar' 2>/dev/null | head -n1); if [ -z \\\"$JAR\\\" ]; then echo 'ERROR: No jar found in target/'; ls -la target/ || true; exit 1; fi; echo Copying $JAR to ../builddir/server.jar; cp -f \\\"$JAR\\\" ../builddir/server.jar; ls -la ../builddir/; echo 'Protecting config...'; mkdir -p ../../config; if [ ! -f ../../config/default.conf ]; then echo 'Copying default.conf to protected location (first run only)'; cp -f worldprops/default.conf ../../config/default.conf; else echo 'Protected config already exists - leaving it alone'; fi; ls -la ../../config/; echo '=== LFS + Build finished ==='\""
     }
 ]
