@@ -1,8 +1,135 @@
 [
     {
-        "ConfigurationFile": "config/default.conf",
-        "ConfigurationType": "ini",
-        "AutoMap": true,
-        "Importable": true
+        "DisplayName": "World Name",
+        "Description": "Name of the world as shown to players",
+        "Category": "World",
+        "FieldName": "WorldName",
+        "InputType": "text",
+        "ParamFieldName": "WorldName",
+        "DefaultValue": "2009Scape",
+        "Placeholder": "2009Scape"
+    },
+    {
+        "DisplayName": "World ID",
+        "Description": "World number (affects ports and identification)",
+        "Category": "World",
+        "FieldName": "WorldId",
+        "InputType": "number",
+        "ParamFieldName": "WorldId",
+        "DefaultValue": "1"
+    },
+    {
+        "DisplayName": "Members World",
+        "Description": "Whether this is a members world",
+        "Category": "World",
+        "FieldName": "Members",
+        "InputType": "checkbox",
+        "ParamFieldName": "Members",
+        "DefaultValue": "true"
+    },
+    {
+        "DisplayName": "Debug Mode",
+        "Description": "Enable debug logging and features",
+        "Category": "Server",
+        "FieldName": "Debug",
+        "InputType": "checkbox",
+        "ParamFieldName": "Debug",
+        "DefaultValue": "true"
+    },
+    {
+        "DisplayName": "Dev Mode",
+        "Description": "Enable developer mode",
+        "Category": "Server",
+        "FieldName": "Dev",
+        "InputType": "checkbox",
+        "ParamFieldName": "Dev",
+        "DefaultValue": "true"
+    },
+    {
+        "DisplayName": "Use Authentication",
+        "Description": "Require correct passwords (set true for production)",
+        "Category": "Server",
+        "FieldName": "UseAuth",
+        "InputType": "checkbox",
+        "ParamFieldName": "UseAuth",
+        "DefaultValue": "false"
+    },
+    {
+        "DisplayName": "Persist Accounts",
+        "Description": "Save account data (credits, playtime, etc.)",
+        "Category": "Server",
+        "FieldName": "PersistAccounts",
+        "InputType": "checkbox",
+        "ParamFieldName": "PersistAccounts",
+        "DefaultValue": "false"
+    },
+    {
+        "DisplayName": "No-Auth Default Admin",
+        "Description": "When auth is off, give all players admin",
+        "Category": "Server",
+        "FieldName": "NoAuthDefaultAdmin",
+        "InputType": "checkbox",
+        "ParamFieldName": "NoAuthDefaultAdmin",
+        "DefaultValue": "true"
+    },
+    {
+        "DisplayName": "Log Level",
+        "Description": "Console log verbosity",
+        "Category": "Server",
+        "FieldName": "LogLevel",
+        "InputType": "enum",
+        "ParamFieldName": "LogLevel",
+        "DefaultValue": "verbose",
+        "EnumValues": {
+            "verbose": "Verbose",
+            "detailed": "Detailed",
+            "cautious": "Cautious",
+            "silent": "Silent"
+        }
+    },
+    {
+        "DisplayName": "Database Name",
+        "Description": "MySQL/MariaDB database name",
+        "Category": "Database",
+        "FieldName": "DatabaseName",
+        "InputType": "text",
+        "ParamFieldName": "DatabaseName",
+        "DefaultValue": "global"
+    },
+    {
+        "DisplayName": "Database Username",
+        "Description": "Database user",
+        "Category": "Database",
+        "FieldName": "DatabaseUsername",
+        "InputType": "text",
+        "ParamFieldName": "DatabaseUsername",
+        "DefaultValue": "root"
+    },
+    {
+        "DisplayName": "Database Password",
+        "Description": "Database password",
+        "Category": "Database",
+        "FieldName": "DatabasePassword",
+        "InputType": "password",
+        "ParamFieldName": "DatabasePassword",
+        "DefaultValue": ""
+    },
+    {
+        "DisplayName": "Database Address",
+        "Description": "Database host",
+        "Category": "Database",
+        "FieldName": "DatabaseAddress",
+        "InputType": "text",
+        "ParamFieldName": "DatabaseAddress",
+        "DefaultValue": "127.0.0.1"
+    },
+    {
+        "DisplayName": "Database Port",
+        "Description": "Database port",
+        "Category": "Database",
+        "FieldName": "DatabasePort",
+        "InputType": "number",
+        "ParamFieldName": "DatabasePort",
+        "DefaultValue": "3306"
     }
 ]

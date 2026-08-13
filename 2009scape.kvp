@@ -21,8 +21,8 @@ Meta.Prerequisites=[]
 Meta.ExtraContainerPackages=[]
 Meta.ConfigReleaseState=NotSpecified
 Meta.NoCommercialUsage=False
-Meta.ConfigVersion=14
-Meta.ReleaseNotes=ApplicationReadyMode=RegexMatch waits for started message
+Meta.ConfigVersion=15
+Meta.ReleaseNotes=Added UI settings manifest for world/server/database options
 Meta.BreakingReleaseNotes=
 Meta.AppConfigId=37269599-5087-4b2d-8eb2-a504376f2c42
 Meta.ImportableExtensions=[]

@@ -1,1 +1,40 @@
-[]
+[
+    {
+        "ConfigFile": "config/default.conf",
+        "ConfigType": "ini",
+        "AutoMap": true,
+        "Importable": true,
+        "ConfigFormat": "{0} = {1}",
+        "Subsections": [
+            {
+                "Heading": "server",
+                "SettingMappings": {
+                    "log_level": "LogLevel",
+                    "use_auth": "UseAuth",
+                    "persist_accounts": "PersistAccounts",
+                    "noauth_default_admin": "NoAuthDefaultAdmin"
+                }
+            },
+            {
+                "Heading": "database",
+                "SettingMappings": {
+                    "database_name": "DatabaseName",
+                    "database_username": "DatabaseUsername",
+                    "database_password": "DatabasePassword",
+                    "database_address": "DatabaseAddress",
+                    "database_port": "DatabasePort"
+                }
+            },
+            {
+                "Heading": "world",
+                "SettingMappings": {
+                    "name": "WorldName",
+                    "world_id": "WorldId",
+                    "members": "Members",
+                    "debug": "Debug",
+                    "dev": "Dev"
+                }
+            }
+        ]
+    }
+]
