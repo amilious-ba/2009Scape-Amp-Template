@@ -1,0 +1,16 @@
+[
+    {
+        "Protocol": "TCP",
+        "Port": 43594,
+        "Ref": "GamePort",
+        "Name": "Main Game Port",
+        "Description": "Port used for main game traffic"
+    },
+    {
+        "Protocol": "TCP",
+        "Port": 43595,
+        "Ref": "WorldListPort",
+        "Name": "World List Port",
+        "Description": "World list and update server"
+    }
+]
