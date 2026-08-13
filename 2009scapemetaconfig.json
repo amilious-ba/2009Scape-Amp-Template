@@ -10,9 +10,13 @@
                 "Heading": "server",
                 "SettingMappings": {
                     "log_level": "LogLevel",
+                    "secret_key": "SecretKey",
                     "use_auth": "UseAuth",
                     "persist_accounts": "PersistAccounts",
-                    "noauth_default_admin": "NoAuthDefaultAdmin"
+                    "noauth_default_admin": "NoAuthDefaultAdmin",
+                    "watchdog_enabled": "WatchdogEnabled",
+                    "connectivity_timeout": "ConnectivityTimeout",
+                    "preload_map": "PreloadMap"
                 }
             },
             {
@@ -31,8 +35,19 @@
                     "name": "WorldName",
                     "world_id": "WorldId",
                     "members": "Members",
+                    "activity": "Activity",
+                    "pvp": "Pvp",
+                    "wild_pvp_enabled": "WildPvp",
+                    "enable_bots": "EnableBots",
                     "debug": "Debug",
-                    "dev": "Dev"
+                    "dev": "Dev",
+                    "xp_rates": "XpRates",
+                    "ironman": "Ironman",
+                    "player_commands": "PlayerCommands",
+                    "i_want_to_cheat": "IWantToCheat",
+                    "skillcape_perks": "SkillcapePerks",
+                    "second_bank": "SecondBank",
+                    "enable_global_chat": "EnableGlobalChat"
                 }
             }
         ]
