@@ -22,50 +22,96 @@ public final class ConfigTransformer {
 
     private static final Set<String> SECRET_KEYS = Set.of("secret_key", "database_password");
 
+    private static final String UI_BANNER =
+            "# =============================================================================\n"
+          + "# Managed by AMP — edit settings in the AMP web UI, not this file.\n"
+          + "# Changes made only here may be overwritten when the instance starts.\n"
+          + "# File: config/default.conf (protected; outside the git tree)\n"
+          + "# =============================================================================\n";
+
     private ConfigTransformer() {}
 
-    /** Copy source conf to protected conf if missing. */
+    /** Copy source conf to protected conf if missing, then ensure UI banner. */
     public static void ensureConf(Path conf, Path source) throws IOException {
-        if (Files.isRegularFile(conf)) {
+        if (!Files.isRegularFile(conf)) {
+            if (source == null || !Files.isRegularFile(source)) {
+                throw new HelperException(1, "Config missing and no --source to copy from: " + conf);
+            }
+            Files.createDirectories(conf.getParent() != null ? conf.getParent() : Path.of("."));
+            Files.copy(source, conf);
+            System.out.println("Copied default.conf from " + source);
+        }
+        ensureUiBanner(conf);
+    }
+
+    /** Prepend UI guidance comment if not already present. */
+    public static void ensureUiBanner(Path conf) throws IOException {
+        if (!Files.isRegularFile(conf)) {
             return;
         }
-        if (source == null || !Files.isRegularFile(source)) {
-            throw new HelperException(1, "Config missing and no --source to copy from: " + conf);
+        String text = Files.readString(conf, StandardCharsets.UTF_8);
+        if (text.contains("Managed by AMP")) {
+            return;
         }
-        Files.createDirectories(conf.getParent() != null ? conf.getParent() : Path.of("."));
-        Files.copy(source, conf);
-        System.out.println("Copied default.conf from " + source);
+        // Strip a leading BOM if any
+        if (text.startsWith("\uFEFF")) {
+            text = text.substring(1);
+        }
+        Files.writeString(conf, UI_BANNER + text, StandardCharsets.UTF_8);
+        System.out.println("Added AMP UI notice to default.conf");
     }
 
     /**
-     * Seed amp-settings from conf only if settings file is missing or empty.
+     * Seed amp-settings from conf if missing/empty.
+     * If settings already exists, merge in any keys present in conf but missing from settings
+     * (does not overwrite existing values).
      */
     public static void seed(Path conf, Path settings, Path source) throws IOException {
         ensureConf(conf, source);
-
-        if (Files.isRegularFile(settings) && Files.size(settings) > 0) {
-            System.out.println("amp-settings.cfg exists - leaving unchanged");
-            return;
-        }
 
         if (!Files.isRegularFile(conf)) {
             throw new HelperException(1, "Cannot seed: conf not found: " + conf);
         }
 
-        Map<String, String> flat = confToFlat(conf);
+        Map<String, String> fromConf = confToFlat(conf);
         Files.createDirectories(settings.getParent() != null ? settings.getParent() : Path.of("."));
-        StringBuilder sb = new StringBuilder();
-        for (Map.Entry<String, String> e : flat.entrySet()) {
-            sb.append(e.getKey()).append('=').append(e.getValue()).append('\n');
-        }
-        Files.writeString(settings, sb.toString(), StandardCharsets.UTF_8);
-        System.out.println("Seeded amp-settings.cfg from default.conf (" + flat.size() + " keys)");
-        int shown = 0;
-        for (String k : flat.keySet()) {
-            System.out.println(k + "=" + redact(keyOnly(k), flat.get(k)));
-            if (++shown >= 8) {
-                break;
+
+        if (!Files.isRegularFile(settings) || Files.size(settings) == 0) {
+            StringBuilder sb = new StringBuilder();
+            for (Map.Entry<String, String> e : fromConf.entrySet()) {
+                sb.append(e.getKey()).append('=').append(e.getValue()).append('\n');
             }
+            Files.writeString(settings, sb.toString(), StandardCharsets.UTF_8);
+            System.out.println("Seeded amp-settings.cfg from default.conf (" + fromConf.size() + " keys)");
+            int shown = 0;
+            for (String k : fromConf.keySet()) {
+                System.out.println(k + "=" + redact(keyOnly(k), fromConf.get(k)));
+                if (++shown >= 8) {
+                    break;
+                }
+            }
+            return;
+        }
+
+        // Merge missing keys only
+        Map<String, String> existing = loadSettings(settings);
+        int added = 0;
+        for (Map.Entry<String, String> e : fromConf.entrySet()) {
+            if (!existing.containsKey(e.getKey())) {
+                existing.put(e.getKey(), e.getValue());
+                added++;
+                System.out.println("Merged missing key " + e.getKey() + "=" + redact(keyOnly(e.getKey()), e.getValue()));
+            }
+        }
+        if (added > 0) {
+            StringBuilder full = new StringBuilder();
+            for (Map.Entry<String, String> e : existing.entrySet()) {
+                full.append(e.getKey()).append('=').append(e.getValue()).append('\n');
+            }
+            Files.writeString(settings, full.toString(), StandardCharsets.UTF_8);
+            System.out.println("Merged " + added + " missing key(s) into amp-settings.cfg");
+        } else {
+            System.out.println("amp-settings.cfg exists - no missing keys to merge");
         }
     }
 
@@ -76,6 +122,7 @@ public final class ConfigTransformer {
         if (!Files.isRegularFile(conf)) {
             throw new HelperException(1, "Conf missing: " + conf);
         }
+        ensureUiBanner(conf);
         if (!Files.isRegularFile(settings)) {
             System.out.println("No amp-settings.cfg - skip apply");
             return;

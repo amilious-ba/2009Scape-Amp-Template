@@ -35,7 +35,7 @@
     {
         "DisplayName": "Management Server IP",
         "Description": "IP address of the management server (msip). Use 127.0.0.1 when everything runs on the same host.",
-        "Category": "Server",
+        "Category": "Network",
         "FieldName": "server_msip",
         "InputType": "text",
         "ParamFieldName": "server_msip",
@@ -53,7 +53,7 @@
     {
         "DisplayName": "Use Authentication",
         "Description": "Require correct passwords (hashed and stored in the database). Must be true for production or any multi-user server. If false, password correctness is ignored. Requires a working database.",
-        "Category": "Server",
+        "Category": "Authentication",
         "FieldName": "server_use_auth",
         "InputType": "checkbox",
         "ParamFieldName": "server_use_auth",
@@ -62,7 +62,7 @@
     {
         "DisplayName": "Persist Accounts",
         "Description": "Save account metadata (credits, playtime, rights, etc.) to the database. Does NOT affect character saves like stats or inventory (those are always files). Requires a working database. Set true for production.",
-        "Category": "Server",
+        "Category": "Authentication",
         "FieldName": "server_persist_accounts",
         "InputType": "checkbox",
         "ParamFieldName": "server_persist_accounts",
@@ -71,7 +71,7 @@
     {
         "DisplayName": "No-Auth Default Admin",
         "Description": "When Use Authentication is off, give every player admin rights by default. Useful for single-player testing; turn off for any shared server.",
-        "Category": "Server",
+        "Category": "Authentication",
         "FieldName": "server_noauth_default_admin",
         "InputType": "checkbox",
         "ParamFieldName": "server_noauth_default_admin",
@@ -80,7 +80,7 @@
     {
         "DisplayName": "Daily Accounts Per IP",
         "Description": "Maximum number of different accounts a single IP can log into per day. Helps limit multi-accounting from one connection.",
-        "Category": "Server",
+        "Category": "Authentication",
         "FieldName": "server_daily_accounts_per_ip",
         "InputType": "number",
         "ParamFieldName": "server_daily_accounts_per_ip",
@@ -89,7 +89,7 @@
     {
         "DisplayName": "Watchdog Enabled",
         "Description": "Periodically check external URLs to detect if the host is offline. Disable if you do not want outbound connectivity checks or see false offline warnings.",
-        "Category": "Server",
+        "Category": "Network",
         "FieldName": "server_watchdog_enabled",
         "InputType": "checkbox",
         "ParamFieldName": "server_watchdog_enabled",
@@ -98,7 +98,7 @@
     {
         "DisplayName": "Connectivity Check URLs",
         "Description": "Comma-separated list of URLs the watchdog pings (e.g. https://google.com,https://2009scape.org). Only used when Watchdog is enabled.",
-        "Category": "Server",
+        "Category": "Network",
         "FieldName": "server_connectivity_check_url",
         "InputType": "text",
         "ParamFieldName": "server_connectivity_check_url",
@@ -106,8 +106,8 @@
     },
     {
         "DisplayName": "Connectivity Timeout (ms)",
-        "Description": "How long (milliseconds) the watchdog waits for each URL. Raise this (e.g. 2000–5000) if you see false 'Are we offline?' messages.",
-        "Category": "Server",
+        "Description": "How long (milliseconds) the watchdog waits for each URL. Raise this (e.g. 2000\u20135000) if you see false 'Are we offline?' messages.",
+        "Category": "Network",
         "FieldName": "server_connectivity_timeout",
         "InputType": "number",
         "ParamFieldName": "server_connectivity_timeout",
@@ -116,7 +116,7 @@
     {
         "DisplayName": "WebSocket Enabled",
         "Description": "Enable a WebSocket listener for browser clients. Uses the same binary game protocol as TCP; each binary frame is treated as a byte chunk.",
-        "Category": "Server",
+        "Category": "Network",
         "FieldName": "server_websocket_enabled",
         "InputType": "checkbox",
         "ParamFieldName": "server_websocket_enabled",
@@ -125,7 +125,7 @@
     {
         "DisplayName": "WebSocket Port",
         "Description": "WebSocket listen port. Leave at 0 to use the default of 53594 + world_id (world 1 = 53595).",
-        "Category": "Server",
+        "Category": "Network",
         "FieldName": "server_websocket_port",
         "InputType": "number",
         "ParamFieldName": "server_websocket_port",
@@ -134,7 +134,7 @@
     {
         "DisplayName": "WebSocket TLS Enabled",
         "Description": "Enable TLS on the WebSocket listener so browser clients can connect with wss:// (required for many PWA/HTTPS setups).",
-        "Category": "Server",
+        "Category": "Network",
         "FieldName": "server_websocket_tls_enabled",
         "InputType": "checkbox",
         "ParamFieldName": "server_websocket_tls_enabled",
@@ -143,7 +143,7 @@
     {
         "DisplayName": "WebSocket TLS Keystore Path",
         "Description": "Path to a PKCS12 keystore for WebSocket TLS, e.g. certs/dev-wss.p12. Only needed when WebSocket TLS is enabled.",
-        "Category": "Server",
+        "Category": "Network",
         "FieldName": "server_websocket_tls_keystore_path",
         "InputType": "text",
         "ParamFieldName": "server_websocket_tls_keystore_path",
@@ -152,7 +152,7 @@
     {
         "DisplayName": "WebSocket TLS Keystore Password",
         "Description": "Password for the PKCS12 keystore. Leave blank if the keystore was exported with an empty password.",
-        "Category": "Server",
+        "Category": "Network",
         "FieldName": "server_websocket_tls_keystore_password",
         "InputType": "password",
         "ParamFieldName": "server_websocket_tls_keystore_password",
@@ -323,7 +323,7 @@
     {
         "DisplayName": "PvP World",
         "Description": "Flag this as a PvP world. Affects world-list presentation and PvP-oriented rules where the server checks this flag.",
-        "Category": "World",
+        "Category": "Wilderness",
         "FieldName": "world_pvp",
         "InputType": "checkbox",
         "ParamFieldName": "world_pvp",
@@ -341,7 +341,7 @@
     {
         "DisplayName": "Enable Bots",
         "Description": "Spawn NPC adventure bots in the world. Makes the world feel more populated; uses CPU and the Max Adv Bots limit.",
-        "Category": "World",
+        "Category": "Bots",
         "FieldName": "world_enable_bots",
         "InputType": "checkbox",
         "ParamFieldName": "world_enable_bots",
@@ -422,7 +422,7 @@
     {
         "DisplayName": "Enable Botting",
         "Description": "Enable botting-related features/scripts support on the server. Intended for singleplayer-style use; leave off on public worlds.",
-        "Category": "Gameplay",
+        "Category": "Bots",
         "FieldName": "world_enable_botting",
         "InputType": "checkbox",
         "ParamFieldName": "world_enable_botting",
@@ -431,7 +431,7 @@
     {
         "DisplayName": "Max Adv Bots",
         "Description": "Maximum number of adventure bots the server will maintain when Enable Bots is on.",
-        "Category": "Gameplay",
+        "Category": "Bots",
         "FieldName": "world_max_adv_bots",
         "InputType": "number",
         "ParamFieldName": "world_max_adv_bots",
@@ -449,7 +449,7 @@
     {
         "DisplayName": "Wilderness PvP",
         "Description": "Allow player-vs-player combat in the Wilderness. Turn on for a normal multiplayer wilderness experience.",
-        "Category": "Gameplay",
+        "Category": "Wilderness",
         "FieldName": "world_wild_pvp_enabled",
         "InputType": "checkbox",
         "ParamFieldName": "world_wild_pvp_enabled",
@@ -503,7 +503,7 @@
     {
         "DisplayName": "Bots Influence GE Price",
         "Description": "Allow adventure bots' GE activity to influence prices. Makes the economy feel more alive when bots are enabled.",
-        "Category": "Gameplay",
+        "Category": "Bots",
         "FieldName": "world_bots_influence_ge_price",
         "InputType": "checkbox",
         "ParamFieldName": "world_bots_influence_ge_price",
@@ -530,7 +530,7 @@
     {
         "DisplayName": "Revenant Population",
         "Description": "How many revenants should be active at once in the wilderness. Set 0 to effectively disable them.",
-        "Category": "Gameplay",
+        "Category": "Wilderness",
         "FieldName": "world_revenant_population",
         "InputType": "number",
         "ParamFieldName": "world_revenant_population",
@@ -584,7 +584,7 @@
     {
         "DisplayName": "Holiday Event Randoms",
         "Description": "Enable holiday-themed random events. Does not change normal random events. Use with the force flags below if you want a specific holiday.",
-        "Category": "Gameplay",
+        "Category": "Holidays",
         "FieldName": "world_holiday_event_randoms",
         "InputType": "checkbox",
         "ParamFieldName": "world_holiday_event_randoms",
@@ -593,7 +593,7 @@
     {
         "DisplayName": "Force Halloween Randoms",
         "Description": "Force Halloween random events. Only enable one force-* holiday option at a time.",
-        "Category": "Gameplay",
+        "Category": "Holidays",
         "FieldName": "world_force_halloween_randoms",
         "InputType": "checkbox",
         "ParamFieldName": "world_force_halloween_randoms",
@@ -602,7 +602,7 @@
     {
         "DisplayName": "Force Christmas Randoms",
         "Description": "Force Christmas random events. Only enable one force-* holiday option at a time.",
-        "Category": "Gameplay",
+        "Category": "Holidays",
         "FieldName": "world_force_christmas_randoms",
         "InputType": "checkbox",
         "ParamFieldName": "world_force_christmas_randoms",
@@ -611,7 +611,7 @@
     {
         "DisplayName": "April Fools Event",
         "Description": "Enable the inauthentic April Fools event content.",
-        "Category": "Gameplay",
+        "Category": "Holidays",
         "FieldName": "world_april_fools_event",
         "InputType": "checkbox",
         "ParamFieldName": "world_april_fools_event",
@@ -620,7 +620,7 @@
     {
         "DisplayName": "Force April Fools",
         "Description": "Force April Fools content regardless of date. Use with care on a live world.",
-        "Category": "Gameplay",
+        "Category": "Holidays",
         "FieldName": "world_force_april_fools",
         "InputType": "checkbox",
         "ParamFieldName": "world_force_april_fools",
@@ -638,7 +638,7 @@
     {
         "DisplayName": "Enhanced Deep Wilderness",
         "Description": "Past the members' fence, apply a red skull that boosts brawler/PvP drop rates. Inauthentic deep-wild enhancement.",
-        "Category": "Gameplay",
+        "Category": "Wilderness",
         "FieldName": "world_enhanced_deep_wilderness",
         "InputType": "checkbox",
         "ParamFieldName": "world_enhanced_deep_wilderness",
@@ -647,7 +647,7 @@
     {
         "DisplayName": "Wilderness Exclusive Loot",
         "Description": "Allow wilderness-exclusive loot such as brawling gloves and PvP gear from revenants and the Chaos Elemental.",
-        "Category": "Gameplay",
+        "Category": "Wilderness",
         "FieldName": "world_wilderness_exclusive_loot",
         "InputType": "checkbox",
         "ParamFieldName": "world_wilderness_exclusive_loot",
@@ -719,154 +719,171 @@
     {
         "DisplayName": "Data Path",
         "Description": "Base folder for game data. Other paths can use @data which is replaced with this value. Default is data under the Server directory.",
-        "Category": "Paths",
+        "Category": "Advanced",
         "FieldName": "paths_data_path",
         "InputType": "text",
         "ParamFieldName": "paths_data_path",
-        "DefaultValue": "data"
+        "DefaultValue": "data",
+        "Hidden": true
     },
     {
         "DisplayName": "Cache Path",
         "Description": "Path to the cache. @data is replaced with Data Path. Do not change unless you know why.",
-        "Category": "Paths",
+        "Category": "Advanced",
         "FieldName": "paths_cache_path",
         "InputType": "text",
         "ParamFieldName": "paths_cache_path",
-        "DefaultValue": "@data/cache"
+        "DefaultValue": "@data/cache",
+        "Hidden": true
     },
     {
         "DisplayName": "Store Path",
         "Description": "Path to the server store. @data is replaced with Data Path.",
-        "Category": "Paths",
+        "Category": "Advanced",
         "FieldName": "paths_store_path",
         "InputType": "text",
         "ParamFieldName": "paths_store_path",
-        "DefaultValue": "@data/serverstore"
+        "DefaultValue": "@data/serverstore",
+        "Hidden": true
     },
     {
         "DisplayName": "Save Path",
         "Description": "Directory where player character JSON saves are written. Critical to back up.",
-        "Category": "Paths",
+        "Category": "Advanced",
         "FieldName": "paths_save_path",
         "InputType": "text",
         "ParamFieldName": "paths_save_path",
-        "DefaultValue": "@data/players"
+        "DefaultValue": "@data/players",
+        "Hidden": true
     },
     {
         "DisplayName": "Configs Path",
         "Description": "Path to JSON/XML game config files (items, NPCs, shops, etc.).",
-        "Category": "Paths",
+        "Category": "Advanced",
         "FieldName": "paths_configs_path",
         "InputType": "text",
         "ParamFieldName": "paths_configs_path",
-        "DefaultValue": "@data/configs"
+        "DefaultValue": "@data/configs",
+        "Hidden": true
     },
     {
         "DisplayName": "Grand Exchange Data Path",
         "Description": "Where Grand Exchange / economy data is stored.",
-        "Category": "Paths",
+        "Category": "Advanced",
         "FieldName": "paths_grand_exchange_data_path",
         "InputType": "text",
         "ParamFieldName": "paths_grand_exchange_data_path",
-        "DefaultValue": "@data/eco"
+        "DefaultValue": "@data/eco",
+        "Hidden": true
     },
     {
         "DisplayName": "Rare Drop Table Path",
         "Description": "XML file defining the rare drop table (RDT).",
-        "Category": "Paths",
+        "Category": "Advanced",
         "FieldName": "paths_rare_drop_table_path",
         "InputType": "text",
         "ParamFieldName": "paths_rare_drop_table_path",
-        "DefaultValue": "@data/configs/shared_tables/RDT.xml"
+        "DefaultValue": "@data/configs/shared_tables/RDT.xml",
+        "Hidden": true
     },
     {
         "DisplayName": "C.Ele Drop Table Path",
         "Description": "XML file defining the Chaos Elemental minor drop table.",
-        "Category": "Paths",
+        "Category": "Advanced",
         "FieldName": "paths_cele_drop_table_path",
         "InputType": "text",
         "ParamFieldName": "paths_cele_drop_table_path",
-        "DefaultValue": "@data/configs/shared_tables/CELEDT.xml"
+        "DefaultValue": "@data/configs/shared_tables/CELEDT.xml",
+        "Hidden": true
     },
     {
         "DisplayName": "Uncommon Seed Drop Table Path",
         "Description": "XML file defining the uncommon seed drop table (USDT).",
-        "Category": "Paths",
+        "Category": "Advanced",
         "FieldName": "paths_uncommon_seed_drop_table_path",
         "InputType": "text",
         "ParamFieldName": "paths_uncommon_seed_drop_table_path",
-        "DefaultValue": "@data/configs/shared_tables/USDT.xml"
+        "DefaultValue": "@data/configs/shared_tables/USDT.xml",
+        "Hidden": true
     },
     {
         "DisplayName": "Herb Drop Table Path",
         "Description": "XML file defining the herb drop table (HDT).",
-        "Category": "Paths",
+        "Category": "Advanced",
         "FieldName": "paths_herb_drop_table_path",
         "InputType": "text",
         "ParamFieldName": "paths_herb_drop_table_path",
-        "DefaultValue": "@data/configs/shared_tables/HDT.xml"
+        "DefaultValue": "@data/configs/shared_tables/HDT.xml",
+        "Hidden": true
     },
     {
         "DisplayName": "Gem Drop Table Path",
         "Description": "XML file defining the gem drop table (GDT).",
-        "Category": "Paths",
+        "Category": "Advanced",
         "FieldName": "paths_gem_drop_table_path",
         "InputType": "text",
         "ParamFieldName": "paths_gem_drop_table_path",
-        "DefaultValue": "@data/configs/shared_tables/GDT.xml"
+        "DefaultValue": "@data/configs/shared_tables/GDT.xml",
+        "Hidden": true
     },
     {
         "DisplayName": "Rare Seed Drop Table Path",
         "Description": "XML file defining the rare seed drop table (RSDT).",
-        "Category": "Paths",
+        "Category": "Advanced",
         "FieldName": "paths_rare_seed_drop_table_path",
         "InputType": "text",
         "ParamFieldName": "paths_rare_seed_drop_table_path",
-        "DefaultValue": "@data/configs/shared_tables/RSDT.xml"
+        "DefaultValue": "@data/configs/shared_tables/RSDT.xml",
+        "Hidden": true
     },
     {
         "DisplayName": "Allotment Seed Drop Table Path",
         "Description": "XML file defining the allotment seed drop table (ASDT).",
-        "Category": "Paths",
+        "Category": "Advanced",
         "FieldName": "paths_allotment_seed_drop_table_path",
         "InputType": "text",
         "ParamFieldName": "paths_allotment_seed_drop_table_path",
-        "DefaultValue": "@data/configs/shared_tables/ASDT.xml"
+        "DefaultValue": "@data/configs/shared_tables/ASDT.xml",
+        "Hidden": true
     },
     {
         "DisplayName": "Object Parser Path",
         "Description": "XML file with boot-time object changes applied when the server starts.",
-        "Category": "Paths",
+        "Category": "Advanced",
         "FieldName": "paths_object_parser_path",
         "InputType": "text",
         "ParamFieldName": "paths_object_parser_path",
-        "DefaultValue": "@data/ObjectParser.xml"
+        "DefaultValue": "@data/ObjectParser.xml",
+        "Hidden": true
     },
     {
         "DisplayName": "Logs Path",
         "Description": "Directory where server log files are written when Write Logs is enabled.",
-        "Category": "Paths",
+        "Category": "Advanced",
         "FieldName": "paths_logs_path",
         "InputType": "text",
         "ParamFieldName": "paths_logs_path",
-        "DefaultValue": "@data/logs"
+        "DefaultValue": "@data/logs",
+        "Hidden": true
     },
     {
         "DisplayName": "Bot Data Path",
         "Description": "Directory for adventure-bot related data files.",
-        "Category": "Paths",
+        "Category": "Advanced",
         "FieldName": "paths_bot_data",
         "InputType": "text",
         "ParamFieldName": "paths_bot_data",
-        "DefaultValue": "@data/botdata"
+        "DefaultValue": "@data/botdata",
+        "Hidden": true
     },
     {
         "DisplayName": "Eco Data Path",
         "Description": "Directory for economy-related data (often shared with GE data).",
-        "Category": "Paths",
+        "Category": "Advanced",
         "FieldName": "paths_eco_data",
         "InputType": "text",
         "ParamFieldName": "paths_eco_data",
-        "DefaultValue": "@data/eco"
+        "DefaultValue": "@data/eco",
+        "Hidden": true
     }
 ]
