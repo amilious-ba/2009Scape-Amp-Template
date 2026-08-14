@@ -1,86 +1,5 @@
 [
     {
-        "DisplayName": "World Name",
-        "Description": "Name of the world as shown to players",
-        "Category": "World",
-        "FieldName": "world_name",
-        "InputType": "text",
-        "ParamFieldName": "world_name",
-        "DefaultValue": "2009Scape"
-    },
-    {
-        "DisplayName": "World ID",
-        "Description": "World number",
-        "Category": "World",
-        "FieldName": "world_world_id",
-        "InputType": "number",
-        "ParamFieldName": "world_world_id",
-        "DefaultValue": "1"
-    },
-    {
-        "DisplayName": "Members World",
-        "Description": "Whether this is a members world",
-        "Category": "World",
-        "FieldName": "world_members",
-        "InputType": "checkbox",
-        "ParamFieldName": "world_members",
-        "DefaultValue": "true"
-    },
-    {
-        "DisplayName": "Activity Text",
-        "Description": "Text shown on the world list",
-        "Category": "World",
-        "FieldName": "world_activity",
-        "InputType": "text",
-        "ParamFieldName": "world_activity",
-        "DefaultValue": "2009Scape Classic."
-    },
-    {
-        "DisplayName": "PvP World",
-        "Description": "Enable PvP world flag",
-        "Category": "World",
-        "FieldName": "world_pvp",
-        "InputType": "checkbox",
-        "ParamFieldName": "world_pvp",
-        "DefaultValue": "false"
-    },
-    {
-        "DisplayName": "Wilderness PvP",
-        "Description": "Enable wilderness PvP",
-        "Category": "World",
-        "FieldName": "world_wild_pvp_enabled",
-        "InputType": "checkbox",
-        "ParamFieldName": "world_wild_pvp_enabled",
-        "DefaultValue": "false"
-    },
-    {
-        "DisplayName": "Enable Bots",
-        "Description": "Spawn NPC bots in the world",
-        "Category": "World",
-        "FieldName": "world_enable_bots",
-        "InputType": "checkbox",
-        "ParamFieldName": "world_enable_bots",
-        "DefaultValue": "true"
-    },
-    {
-        "DisplayName": "Debug Mode",
-        "Description": "Enable debug mode",
-        "Category": "Server",
-        "FieldName": "world_debug",
-        "InputType": "checkbox",
-        "ParamFieldName": "world_debug",
-        "DefaultValue": "true"
-    },
-    {
-        "DisplayName": "Dev Mode",
-        "Description": "Enable developer mode",
-        "Category": "Server",
-        "FieldName": "world_dev",
-        "InputType": "checkbox",
-        "ParamFieldName": "world_dev",
-        "DefaultValue": "true"
-    },
-    {
         "DisplayName": "Log Level",
         "Description": "Console log verbosity",
         "Category": "Server",
@@ -97,7 +16,7 @@
     },
     {
         "DisplayName": "Secret Key",
-        "Description": "Must match the client secret key or connections are refused",
+        "Description": "Must match the client secret key",
         "Category": "Server",
         "FieldName": "server_secret_key",
         "InputType": "text",
@@ -105,8 +24,35 @@
         "DefaultValue": "2009scape_development"
     },
     {
+        "DisplayName": "Write Logs",
+        "Description": "Write logs to disk",
+        "Category": "Server",
+        "FieldName": "server_write_logs",
+        "InputType": "checkbox",
+        "ParamFieldName": "server_write_logs",
+        "DefaultValue": "true"
+    },
+    {
+        "DisplayName": "Management Server IP",
+        "Description": "MS IP address",
+        "Category": "Server",
+        "FieldName": "server_msip",
+        "InputType": "text",
+        "ParamFieldName": "server_msip",
+        "DefaultValue": "127.0.0.1"
+    },
+    {
+        "DisplayName": "Preload Map",
+        "Description": "Preload map (~2GB extra RAM, smoother ticks)",
+        "Category": "Server",
+        "FieldName": "server_preload_map",
+        "InputType": "checkbox",
+        "ParamFieldName": "server_preload_map",
+        "DefaultValue": "false"
+    },
+    {
         "DisplayName": "Use Authentication",
-        "Description": "Require correct passwords (set true for production)",
+        "Description": "Require correct passwords (true in production)",
         "Category": "Server",
         "FieldName": "server_use_auth",
         "InputType": "checkbox",
@@ -115,7 +61,7 @@
     },
     {
         "DisplayName": "Persist Accounts",
-        "Description": "Save account data (credits, playtime, etc.)",
+        "Description": "Persist account data like credits/playtime",
         "Category": "Server",
         "FieldName": "server_persist_accounts",
         "InputType": "checkbox",
@@ -124,12 +70,21 @@
     },
     {
         "DisplayName": "No-Auth Default Admin",
-        "Description": "When auth is off, give all players admin",
+        "Description": "When auth is off, players are admins by default",
         "Category": "Server",
         "FieldName": "server_noauth_default_admin",
         "InputType": "checkbox",
         "ParamFieldName": "server_noauth_default_admin",
         "DefaultValue": "true"
+    },
+    {
+        "DisplayName": "Daily Accounts Per IP",
+        "Description": "Max different accounts per IP per day",
+        "Category": "Server",
+        "FieldName": "server_daily_accounts_per_ip",
+        "InputType": "number",
+        "ParamFieldName": "server_daily_accounts_per_ip",
+        "DefaultValue": "3"
     },
     {
         "DisplayName": "Watchdog Enabled",
@@ -141,8 +96,17 @@
         "DefaultValue": "true"
     },
     {
+        "DisplayName": "Connectivity Check URLs",
+        "Description": "Comma-separated URLs for watchdog",
+        "Category": "Server",
+        "FieldName": "server_connectivity_check_url",
+        "InputType": "text",
+        "ParamFieldName": "server_connectivity_check_url",
+        "DefaultValue": "https://google.com,https://2009scape.org"
+    },
+    {
         "DisplayName": "Connectivity Timeout (ms)",
-        "Description": "Timeout for connectivity checks",
+        "Description": "Watchdog timeout in milliseconds",
         "Category": "Server",
         "FieldName": "server_connectivity_timeout",
         "InputType": "number",
@@ -150,76 +114,49 @@
         "DefaultValue": "500"
     },
     {
-        "DisplayName": "Preload Map",
-        "Description": "Preload map (uses ~2GB extra RAM, smoother ticks)",
+        "DisplayName": "WebSocket Enabled",
+        "Description": "Enable websocket listener for browser clients",
         "Category": "Server",
-        "FieldName": "server_preload_map",
+        "FieldName": "server_websocket_enabled",
         "InputType": "checkbox",
-        "ParamFieldName": "server_preload_map",
+        "ParamFieldName": "server_websocket_enabled",
         "DefaultValue": "false"
     },
     {
-        "DisplayName": "XP Rates Option",
-        "Description": "Show XP rates option on Tutorial Island",
-        "Category": "Gameplay",
-        "FieldName": "world_xp_rates",
+        "DisplayName": "WebSocket Port",
+        "Description": "0 = default 53594 + world_id",
+        "Category": "Server",
+        "FieldName": "server_websocket_port",
+        "InputType": "number",
+        "ParamFieldName": "server_websocket_port",
+        "DefaultValue": "0"
+    },
+    {
+        "DisplayName": "WebSocket TLS Enabled",
+        "Description": "Enable WSS for browser clients",
+        "Category": "Server",
+        "FieldName": "server_websocket_tls_enabled",
         "InputType": "checkbox",
-        "ParamFieldName": "world_xp_rates",
+        "ParamFieldName": "server_websocket_tls_enabled",
         "DefaultValue": "false"
     },
     {
-        "DisplayName": "Ironman Option",
-        "Description": "Enable ironman on Tutorial Island",
-        "Category": "Gameplay",
-        "FieldName": "world_ironman",
-        "InputType": "checkbox",
-        "ParamFieldName": "world_ironman",
-        "DefaultValue": "false"
+        "DisplayName": "WebSocket TLS Keystore Path",
+        "Description": "PKCS12 keystore path",
+        "Category": "Server",
+        "FieldName": "server_websocket_tls_keystore_path",
+        "InputType": "text",
+        "ParamFieldName": "server_websocket_tls_keystore_path",
+        "DefaultValue": ""
     },
     {
-        "DisplayName": "Player Commands",
-        "Description": "Enable extra non-dangerous commands for regular players",
-        "Category": "Gameplay",
-        "FieldName": "world_player_commands",
-        "InputType": "checkbox",
-        "ParamFieldName": "world_player_commands",
-        "DefaultValue": "false"
-    },
-    {
-        "DisplayName": "I Want To Cheat",
-        "Description": "Enable GE auto-buy/auto-sell (cheat mode)",
-        "Category": "Gameplay",
-        "FieldName": "world_i_want_to_cheat",
-        "InputType": "checkbox",
-        "ParamFieldName": "world_i_want_to_cheat",
-        "DefaultValue": "false"
-    },
-    {
-        "DisplayName": "Skillcape Perks",
-        "Description": "Enable skillcape perk effects",
-        "Category": "Gameplay",
-        "FieldName": "world_skillcape_perks",
-        "InputType": "checkbox",
-        "ParamFieldName": "world_skillcape_perks",
-        "DefaultValue": "false"
-    },
-    {
-        "DisplayName": "Second Bank",
-        "Description": "Enable second bank",
-        "Category": "Gameplay",
-        "FieldName": "world_second_bank",
-        "InputType": "checkbox",
-        "ParamFieldName": "world_second_bank",
-        "DefaultValue": "false"
-    },
-    {
-        "DisplayName": "Enable Global Chat",
-        "Description": "Enable global chat",
-        "Category": "Gameplay",
-        "FieldName": "world_enable_global_chat",
-        "InputType": "checkbox",
-        "ParamFieldName": "world_enable_global_chat",
-        "DefaultValue": "false"
+        "DisplayName": "WebSocket TLS Keystore Password",
+        "Description": "PKCS12 password (blank if empty)",
+        "Category": "Server",
+        "FieldName": "server_websocket_tls_keystore_password",
+        "InputType": "password",
+        "ParamFieldName": "server_websocket_tls_keystore_password",
+        "DefaultValue": ""
     },
     {
         "DisplayName": "Database Name",
@@ -262,8 +199,674 @@
         "Description": "Database port",
         "Category": "Database",
         "FieldName": "database_database_port",
-        "InputType": "number",
+        "InputType": "text",
         "ParamFieldName": "database_database_port",
         "DefaultValue": "3306"
+    },
+    {
+        "DisplayName": "Grafana Logging",
+        "Description": "Enable Grafana logging",
+        "Category": "Integrations",
+        "FieldName": "integrations_grafana_logging",
+        "InputType": "checkbox",
+        "ParamFieldName": "integrations_grafana_logging",
+        "DefaultValue": "false"
+    },
+    {
+        "DisplayName": "Grafana Log Path",
+        "Description": "Path for Grafana logs",
+        "Category": "Integrations",
+        "FieldName": "integrations_grafana_log_path",
+        "InputType": "text",
+        "ParamFieldName": "integrations_grafana_log_path",
+        "DefaultValue": "@data/logs"
+    },
+    {
+        "DisplayName": "Grafana Log TTL Days",
+        "Description": "Days to keep Grafana log data",
+        "Category": "Integrations",
+        "FieldName": "integrations_grafana_log_ttl_days",
+        "InputType": "number",
+        "ParamFieldName": "integrations_grafana_log_ttl_days",
+        "DefaultValue": "7"
+    },
+    {
+        "DisplayName": "World Name",
+        "Description": "Name of the world as shown to players",
+        "Category": "World",
+        "FieldName": "world_name",
+        "InputType": "text",
+        "ParamFieldName": "world_name",
+        "DefaultValue": "2009Scape"
+    },
+    {
+        "DisplayName": "World Name (GE)",
+        "Description": "Name used for GE bot announcements",
+        "Category": "World",
+        "FieldName": "world_name_ge",
+        "InputType": "text",
+        "ParamFieldName": "world_name_ge",
+        "DefaultValue": "2009Scape"
+    },
+    {
+        "DisplayName": "Debug Mode",
+        "Description": "Enable debug mode",
+        "Category": "World",
+        "FieldName": "world_debug",
+        "InputType": "checkbox",
+        "ParamFieldName": "world_debug",
+        "DefaultValue": "true"
+    },
+    {
+        "DisplayName": "Dev Mode",
+        "Description": "Enable developer mode",
+        "Category": "World",
+        "FieldName": "world_dev",
+        "InputType": "checkbox",
+        "ParamFieldName": "world_dev",
+        "DefaultValue": "true"
+    },
+    {
+        "DisplayName": "Start GUI",
+        "Description": "Start server GUI",
+        "Category": "World",
+        "FieldName": "world_start_gui",
+        "InputType": "checkbox",
+        "ParamFieldName": "world_start_gui",
+        "DefaultValue": "false"
+    },
+    {
+        "DisplayName": "Daily Restart",
+        "Description": "Enable daily restart",
+        "Category": "World",
+        "FieldName": "world_daily_restart",
+        "InputType": "checkbox",
+        "ParamFieldName": "world_daily_restart",
+        "DefaultValue": "false"
+    },
+    {
+        "DisplayName": "World ID",
+        "Description": "World number",
+        "Category": "World",
+        "FieldName": "world_world_id",
+        "InputType": "text",
+        "ParamFieldName": "world_world_id",
+        "DefaultValue": "1"
+    },
+    {
+        "DisplayName": "Country ID",
+        "Description": "Country id for world list",
+        "Category": "World",
+        "FieldName": "world_country_id",
+        "InputType": "text",
+        "ParamFieldName": "world_country_id",
+        "DefaultValue": "0"
+    },
+    {
+        "DisplayName": "Members World",
+        "Description": "Members world flag",
+        "Category": "World",
+        "FieldName": "world_members",
+        "InputType": "checkbox",
+        "ParamFieldName": "world_members",
+        "DefaultValue": "true"
+    },
+    {
+        "DisplayName": "Activity Text",
+        "Description": "Text shown on the world list",
+        "Category": "World",
+        "FieldName": "world_activity",
+        "InputType": "text",
+        "ParamFieldName": "world_activity",
+        "DefaultValue": "2009Scape Classic."
+    },
+    {
+        "DisplayName": "PvP World",
+        "Description": "PvP world flag",
+        "Category": "World",
+        "FieldName": "world_pvp",
+        "InputType": "checkbox",
+        "ParamFieldName": "world_pvp",
+        "DefaultValue": "false"
+    },
+    {
+        "DisplayName": "Enable Default Clan",
+        "Description": "Auto-join default clan",
+        "Category": "World",
+        "FieldName": "world_enable_default_clan",
+        "InputType": "checkbox",
+        "ParamFieldName": "world_enable_default_clan",
+        "DefaultValue": "true"
+    },
+    {
+        "DisplayName": "Enable Bots",
+        "Description": "Spawn NPC bots",
+        "Category": "World",
+        "FieldName": "world_enable_bots",
+        "InputType": "checkbox",
+        "ParamFieldName": "world_enable_bots",
+        "DefaultValue": "true"
+    },
+    {
+        "DisplayName": "MOTW Identifier",
+        "Description": "Message of the week model ID (0 = random)",
+        "Category": "World",
+        "FieldName": "world_motw_identifier",
+        "InputType": "text",
+        "ParamFieldName": "world_motw_identifier",
+        "DefaultValue": "0"
+    },
+    {
+        "DisplayName": "MOTW Text",
+        "Description": "Message of the week text (@name replaced)",
+        "Category": "World",
+        "FieldName": "world_motw_text",
+        "InputType": "text",
+        "ParamFieldName": "world_motw_text",
+        "DefaultValue": "Welcome to @name!"
+    },
+    {
+        "DisplayName": "New Player Location",
+        "Description": "Spawn coords x,y,z",
+        "Category": "World",
+        "FieldName": "world_new_player_location",
+        "InputType": "text",
+        "ParamFieldName": "world_new_player_location",
+        "DefaultValue": "3094,3107,0"
+    },
+    {
+        "DisplayName": "Home Location",
+        "Description": "Home teleport coords x,y,z",
+        "Category": "World",
+        "FieldName": "world_home_location",
+        "InputType": "text",
+        "ParamFieldName": "world_home_location",
+        "DefaultValue": "3222,3218,0"
+    },
+    {
+        "DisplayName": "Autostock GE",
+        "Description": "Autostock Grand Exchange",
+        "Category": "Gameplay",
+        "FieldName": "world_autostock_ge",
+        "InputType": "checkbox",
+        "ParamFieldName": "world_autostock_ge",
+        "DefaultValue": "false"
+    },
+    {
+        "DisplayName": "Allow Token Purchase",
+        "Description": "Allow token purchase",
+        "Category": "Gameplay",
+        "FieldName": "world_allow_token_purchase",
+        "InputType": "checkbox",
+        "ParamFieldName": "world_allow_token_purchase",
+        "DefaultValue": "false"
+    },
+    {
+        "DisplayName": "Skillcape Perks",
+        "Description": "Enable skillcape perks",
+        "Category": "Gameplay",
+        "FieldName": "world_skillcape_perks",
+        "InputType": "checkbox",
+        "ParamFieldName": "world_skillcape_perks",
+        "DefaultValue": "false"
+    },
+    {
+        "DisplayName": "Increased Door Time",
+        "Description": "Increased door time",
+        "Category": "Gameplay",
+        "FieldName": "world_increased_door_time",
+        "InputType": "checkbox",
+        "ParamFieldName": "world_increased_door_time",
+        "DefaultValue": "false"
+    },
+    {
+        "DisplayName": "Enable Botting",
+        "Description": "Enable botting",
+        "Category": "Gameplay",
+        "FieldName": "world_enable_botting",
+        "InputType": "checkbox",
+        "ParamFieldName": "world_enable_botting",
+        "DefaultValue": "false"
+    },
+    {
+        "DisplayName": "Max Adv Bots",
+        "Description": "Maximum adventure bots",
+        "Category": "Gameplay",
+        "FieldName": "world_max_adv_bots",
+        "InputType": "number",
+        "ParamFieldName": "world_max_adv_bots",
+        "DefaultValue": "100"
+    },
+    {
+        "DisplayName": "Doubling Money Scammers",
+        "Description": "Enable doubling money scammers",
+        "Category": "Gameplay",
+        "FieldName": "world_enable_doubling_money_scammers",
+        "InputType": "checkbox",
+        "ParamFieldName": "world_enable_doubling_money_scammers",
+        "DefaultValue": "true"
+    },
+    {
+        "DisplayName": "Wilderness PvP",
+        "Description": "Enable wilderness PvP",
+        "Category": "Gameplay",
+        "FieldName": "world_wild_pvp_enabled",
+        "InputType": "checkbox",
+        "ParamFieldName": "world_wild_pvp_enabled",
+        "DefaultValue": "false"
+    },
+    {
+        "DisplayName": "Jad Practice",
+        "Description": "Enable Jad practice",
+        "Category": "Gameplay",
+        "FieldName": "world_jad_practice_enabled",
+        "InputType": "checkbox",
+        "ParamFieldName": "world_jad_practice_enabled",
+        "DefaultValue": "false"
+    },
+    {
+        "DisplayName": "Global Chat",
+        "Description": "Enable global chat",
+        "Category": "Gameplay",
+        "FieldName": "world_enable_global_chat",
+        "InputType": "checkbox",
+        "ParamFieldName": "world_enable_global_chat",
+        "DefaultValue": "false"
+    },
+    {
+        "DisplayName": "GE Announcement Limit",
+        "Description": "Min HA value for GE bot announcements",
+        "Category": "Gameplay",
+        "FieldName": "world_ge_announcement_limit",
+        "InputType": "number",
+        "ParamFieldName": "world_ge_announcement_limit",
+        "DefaultValue": "500"
+    },
+    {
+        "DisplayName": "Castle Wars",
+        "Description": "Enable Castle Wars",
+        "Category": "Gameplay",
+        "FieldName": "world_enable_castle_wars",
+        "InputType": "checkbox",
+        "ParamFieldName": "world_enable_castle_wars",
+        "DefaultValue": "false"
+    },
+    {
+        "DisplayName": "Personalized Shops",
+        "Description": "Personalized shops",
+        "Category": "Gameplay",
+        "FieldName": "world_personalized_shops",
+        "InputType": "checkbox",
+        "ParamFieldName": "world_personalized_shops",
+        "DefaultValue": "false"
+    },
+    {
+        "DisplayName": "Bots Influence GE Price",
+        "Description": "Bots influence GE prices",
+        "Category": "Gameplay",
+        "FieldName": "world_bots_influence_ge_price",
+        "InputType": "checkbox",
+        "ParamFieldName": "world_bots_influence_ge_price",
+        "DefaultValue": "true"
+    },
+    {
+        "DisplayName": "Verbose Cutscene",
+        "Description": "Verbose cutscene logging",
+        "Category": "Gameplay",
+        "FieldName": "world_verbose_cutscene",
+        "InputType": "checkbox",
+        "ParamFieldName": "world_verbose_cutscene",
+        "DefaultValue": "false"
+    },
+    {
+        "DisplayName": "Show Rules",
+        "Description": "Show rules on first login",
+        "Category": "Gameplay",
+        "FieldName": "world_show_rules",
+        "InputType": "checkbox",
+        "ParamFieldName": "world_show_rules",
+        "DefaultValue": "false"
+    },
+    {
+        "DisplayName": "Revenant Population",
+        "Description": "Number of active revenants",
+        "Category": "Gameplay",
+        "FieldName": "world_revenant_population",
+        "InputType": "number",
+        "ParamFieldName": "world_revenant_population",
+        "DefaultValue": "30"
+    },
+    {
+        "DisplayName": "I Want To Cheat",
+        "Description": "GE auto-buy/auto-sell",
+        "Category": "Gameplay",
+        "FieldName": "world_i_want_to_cheat",
+        "InputType": "checkbox",
+        "ParamFieldName": "world_i_want_to_cheat",
+        "DefaultValue": "false"
+    },
+    {
+        "DisplayName": "Better Agility Pyramid GP",
+        "Description": "Better agility pyramid GP reward",
+        "Category": "Gameplay",
+        "FieldName": "world_better_agility_pyramid_gp",
+        "InputType": "checkbox",
+        "ParamFieldName": "world_better_agility_pyramid_gp",
+        "DefaultValue": "false"
+    },
+    {
+        "DisplayName": "Better DFS",
+        "Description": "Better dragonfire shield (30s cooldown)",
+        "Category": "Gameplay",
+        "FieldName": "world_better_dfs",
+        "InputType": "checkbox",
+        "ParamFieldName": "world_better_dfs",
+        "DefaultValue": "false"
+    },
+    {
+        "DisplayName": "New Player Announcement",
+        "Description": "Announce new players",
+        "Category": "Gameplay",
+        "FieldName": "world_new_player_announcement",
+        "InputType": "checkbox",
+        "ParamFieldName": "world_new_player_announcement",
+        "DefaultValue": "false"
+    },
+    {
+        "DisplayName": "Candlelight Random",
+        "Description": "Inauthentic candlelight random",
+        "Category": "Gameplay",
+        "FieldName": "world_inauthentic_candlelight_random",
+        "InputType": "checkbox",
+        "ParamFieldName": "world_inauthentic_candlelight_random",
+        "DefaultValue": "false"
+    },
+    {
+        "DisplayName": "Holiday Event Randoms",
+        "Description": "Holiday random events",
+        "Category": "Gameplay",
+        "FieldName": "world_holiday_event_randoms",
+        "InputType": "checkbox",
+        "ParamFieldName": "world_holiday_event_randoms",
+        "DefaultValue": "false"
+    },
+    {
+        "DisplayName": "Force Halloween Randoms",
+        "Description": "Force Halloween randoms",
+        "Category": "Gameplay",
+        "FieldName": "world_force_halloween_randoms",
+        "InputType": "checkbox",
+        "ParamFieldName": "world_force_halloween_randoms",
+        "DefaultValue": "false"
+    },
+    {
+        "DisplayName": "Force Christmas Randoms",
+        "Description": "Force Christmas randoms",
+        "Category": "Gameplay",
+        "FieldName": "world_force_christmas_randoms",
+        "InputType": "checkbox",
+        "ParamFieldName": "world_force_christmas_randoms",
+        "DefaultValue": "false"
+    },
+    {
+        "DisplayName": "April Fools Event",
+        "Description": "Inauthentic April Fools event",
+        "Category": "Gameplay",
+        "FieldName": "world_april_fools_event",
+        "InputType": "checkbox",
+        "ParamFieldName": "world_april_fools_event",
+        "DefaultValue": "false"
+    },
+    {
+        "DisplayName": "Force April Fools",
+        "Description": "Force April Fools",
+        "Category": "Gameplay",
+        "FieldName": "world_force_april_fools",
+        "InputType": "checkbox",
+        "ParamFieldName": "world_force_april_fools",
+        "DefaultValue": "false"
+    },
+    {
+        "DisplayName": "Runecrafting Formula Revision",
+        "Description": "530 / 573 / 581",
+        "Category": "Gameplay",
+        "FieldName": "world_runecrafting_formula_revision",
+        "InputType": "number",
+        "ParamFieldName": "world_runecrafting_formula_revision",
+        "DefaultValue": "530"
+    },
+    {
+        "DisplayName": "Enhanced Deep Wilderness",
+        "Description": "Enhanced deep wilderness red skull",
+        "Category": "Gameplay",
+        "FieldName": "world_enhanced_deep_wilderness",
+        "InputType": "checkbox",
+        "ParamFieldName": "world_enhanced_deep_wilderness",
+        "DefaultValue": "false"
+    },
+    {
+        "DisplayName": "Wilderness Exclusive Loot",
+        "Description": "Wilderness-exclusive loot from revs/C.Ele",
+        "Category": "Gameplay",
+        "FieldName": "world_wilderness_exclusive_loot",
+        "InputType": "checkbox",
+        "ParamFieldName": "world_wilderness_exclusive_loot",
+        "DefaultValue": "false"
+    },
+    {
+        "DisplayName": "XP Rates Option",
+        "Description": "XP rates option on Tutorial Island",
+        "Category": "Gameplay",
+        "FieldName": "world_xp_rates",
+        "InputType": "checkbox",
+        "ParamFieldName": "world_xp_rates",
+        "DefaultValue": "false"
+    },
+    {
+        "DisplayName": "Ironman Option",
+        "Description": "Ironman on Tutorial Island",
+        "Category": "Gameplay",
+        "FieldName": "world_ironman",
+        "InputType": "checkbox",
+        "ParamFieldName": "world_ironman",
+        "DefaultValue": "false"
+    },
+    {
+        "DisplayName": "Shooting Star Ring",
+        "Description": "Ancient blueprint / star sprite ring",
+        "Category": "Gameplay",
+        "FieldName": "world_shooting_star_ring",
+        "InputType": "checkbox",
+        "ParamFieldName": "world_shooting_star_ring",
+        "DefaultValue": "false"
+    },
+    {
+        "DisplayName": "Ring of Wealth Teleport",
+        "Description": "Inauthentic RoW teleport",
+        "Category": "Gameplay",
+        "FieldName": "world_ring_of_wealth_teleport",
+        "InputType": "checkbox",
+        "ParamFieldName": "world_ring_of_wealth_teleport",
+        "DefaultValue": "false"
+    },
+    {
+        "DisplayName": "Second Bank",
+        "Description": "Enable second bank",
+        "Category": "Gameplay",
+        "FieldName": "world_second_bank",
+        "InputType": "checkbox",
+        "ParamFieldName": "world_second_bank",
+        "DefaultValue": "false"
+    },
+    {
+        "DisplayName": "Player Commands",
+        "Description": "Extra non-dangerous player commands",
+        "Category": "Gameplay",
+        "FieldName": "world_player_commands",
+        "InputType": "checkbox",
+        "ParamFieldName": "world_player_commands",
+        "DefaultValue": "false"
+    },
+    {
+        "DisplayName": "Boosted Trawler Rewards",
+        "Description": "Boosted fishing trawler rewards",
+        "Category": "Gameplay",
+        "FieldName": "world_boosted_trawler_rewards",
+        "InputType": "checkbox",
+        "ParamFieldName": "world_boosted_trawler_rewards",
+        "DefaultValue": "false"
+    },
+    {
+        "DisplayName": "Data Path",
+        "Description": "Path to data folder",
+        "Category": "Paths",
+        "FieldName": "paths_data_path",
+        "InputType": "text",
+        "ParamFieldName": "paths_data_path",
+        "DefaultValue": "data"
+    },
+    {
+        "DisplayName": "Cache Path",
+        "Description": "Cache path (@data supported)",
+        "Category": "Paths",
+        "FieldName": "paths_cache_path",
+        "InputType": "text",
+        "ParamFieldName": "paths_cache_path",
+        "DefaultValue": "@data/cache"
+    },
+    {
+        "DisplayName": "Store Path",
+        "Description": "Server store path",
+        "Category": "Paths",
+        "FieldName": "paths_store_path",
+        "InputType": "text",
+        "ParamFieldName": "paths_store_path",
+        "DefaultValue": "@data/serverstore"
+    },
+    {
+        "DisplayName": "Save Path",
+        "Description": "Player saves path",
+        "Category": "Paths",
+        "FieldName": "paths_save_path",
+        "InputType": "text",
+        "ParamFieldName": "paths_save_path",
+        "DefaultValue": "@data/players"
+    },
+    {
+        "DisplayName": "Configs Path",
+        "Description": "Configs path",
+        "Category": "Paths",
+        "FieldName": "paths_configs_path",
+        "InputType": "text",
+        "ParamFieldName": "paths_configs_path",
+        "DefaultValue": "@data/configs"
+    },
+    {
+        "DisplayName": "Grand Exchange Data Path",
+        "Description": "GE data path",
+        "Category": "Paths",
+        "FieldName": "paths_grand_exchange_data_path",
+        "InputType": "text",
+        "ParamFieldName": "paths_grand_exchange_data_path",
+        "DefaultValue": "@data/eco"
+    },
+    {
+        "DisplayName": "Rare Drop Table Path",
+        "Description": "RDT xml path",
+        "Category": "Paths",
+        "FieldName": "paths_rare_drop_table_path",
+        "InputType": "text",
+        "ParamFieldName": "paths_rare_drop_table_path",
+        "DefaultValue": "@data/configs/shared_tables/RDT.xml"
+    },
+    {
+        "DisplayName": "C.Ele Drop Table Path",
+        "Description": "Chaos Elemental drop table path",
+        "Category": "Paths",
+        "FieldName": "paths_cele_drop_table_path",
+        "InputType": "text",
+        "ParamFieldName": "paths_cele_drop_table_path",
+        "DefaultValue": "@data/configs/shared_tables/CELEDT.xml"
+    },
+    {
+        "DisplayName": "Uncommon Seed Drop Table Path",
+        "Description": "USDT path",
+        "Category": "Paths",
+        "FieldName": "paths_uncommon_seed_drop_table_path",
+        "InputType": "text",
+        "ParamFieldName": "paths_uncommon_seed_drop_table_path",
+        "DefaultValue": "@data/configs/shared_tables/USDT.xml"
+    },
+    {
+        "DisplayName": "Herb Drop Table Path",
+        "Description": "HDT path",
+        "Category": "Paths",
+        "FieldName": "paths_herb_drop_table_path",
+        "InputType": "text",
+        "ParamFieldName": "paths_herb_drop_table_path",
+        "DefaultValue": "@data/configs/shared_tables/HDT.xml"
+    },
+    {
+        "DisplayName": "Gem Drop Table Path",
+        "Description": "GDT path",
+        "Category": "Paths",
+        "FieldName": "paths_gem_drop_table_path",
+        "InputType": "text",
+        "ParamFieldName": "paths_gem_drop_table_path",
+        "DefaultValue": "@data/configs/shared_tables/GDT.xml"
+    },
+    {
+        "DisplayName": "Rare Seed Drop Table Path",
+        "Description": "RSDT path",
+        "Category": "Paths",
+        "FieldName": "paths_rare_seed_drop_table_path",
+        "InputType": "text",
+        "ParamFieldName": "paths_rare_seed_drop_table_path",
+        "DefaultValue": "@data/configs/shared_tables/RSDT.xml"
+    },
+    {
+        "DisplayName": "Allotment Seed Drop Table Path",
+        "Description": "ASDT path",
+        "Category": "Paths",
+        "FieldName": "paths_allotment_seed_drop_table_path",
+        "InputType": "text",
+        "ParamFieldName": "paths_allotment_seed_drop_table_path",
+        "DefaultValue": "@data/configs/shared_tables/ASDT.xml"
+    },
+    {
+        "DisplayName": "Object Parser Path",
+        "Description": "ObjectParser.xml path",
+        "Category": "Paths",
+        "FieldName": "paths_object_parser_path",
+        "InputType": "text",
+        "ParamFieldName": "paths_object_parser_path",
+        "DefaultValue": "@data/ObjectParser.xml"
+    },
+    {
+        "DisplayName": "Logs Path",
+        "Description": "Logs path",
+        "Category": "Paths",
+        "FieldName": "paths_logs_path",
+        "InputType": "text",
+        "ParamFieldName": "paths_logs_path",
+        "DefaultValue": "@data/logs"
+    },
+    {
+        "DisplayName": "Bot Data Path",
+        "Description": "Bot data path",
+        "Category": "Paths",
+        "FieldName": "paths_bot_data",
+        "InputType": "text",
+        "ParamFieldName": "paths_bot_data",
+        "DefaultValue": "@data/botdata"
+    },
+    {
+        "DisplayName": "Eco Data Path",
+        "Description": "Economy data path",
+        "Category": "Paths",
+        "FieldName": "paths_eco_data",
+        "InputType": "text",
+        "ParamFieldName": "paths_eco_data",
+        "DefaultValue": "@data/eco"
     }
 ]
