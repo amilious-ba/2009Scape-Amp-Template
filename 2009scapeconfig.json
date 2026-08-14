@@ -1,7 +1,7 @@
 [
     {
         "DisplayName": "Log Level",
-        "Description": "Console log verbosity",
+        "Description": "How verbose the server console logs are. verbose = everything; detailed = hides fine/debug spam; cautious = warnings and errors only; silent = errors only.",
         "Category": "Server",
         "FieldName": "server_log_level",
         "InputType": "enum",
@@ -16,7 +16,7 @@
     },
     {
         "DisplayName": "Secret Key",
-        "Description": "Must match the client secret key",
+        "Description": "Shared secret sent by the client on login. Client and server MUST match or connections are refused. Change this if the server is exposed beyond a trusted network.",
         "Category": "Server",
         "FieldName": "server_secret_key",
         "InputType": "text",
@@ -25,7 +25,7 @@
     },
     {
         "DisplayName": "Write Logs",
-        "Description": "Write logs to disk",
+        "Description": "Write server logs to disk under the configured logs path. Disable to reduce disk I/O on quiet private servers.",
         "Category": "Server",
         "FieldName": "server_write_logs",
         "InputType": "checkbox",
@@ -34,7 +34,7 @@
     },
     {
         "DisplayName": "Management Server IP",
-        "Description": "MS IP address",
+        "Description": "IP address of the management server (msip). Use 127.0.0.1 when everything runs on the same host.",
         "Category": "Server",
         "FieldName": "server_msip",
         "InputType": "text",
@@ -43,7 +43,7 @@
     },
     {
         "DisplayName": "Preload Map",
-        "Description": "Preload map (~2GB extra RAM, smoother ticks)",
+        "Description": "Load the full map into memory at startup. Uses about 2GB extra RAM but makes game ticks smoother. Only enable if the host has spare memory.",
         "Category": "Server",
         "FieldName": "server_preload_map",
         "InputType": "checkbox",
@@ -52,7 +52,7 @@
     },
     {
         "DisplayName": "Use Authentication",
-        "Description": "Require correct passwords (true in production)",
+        "Description": "Require correct passwords (hashed and stored in the database). Must be true for production or any multi-user server. If false, password correctness is ignored. Requires a working database.",
         "Category": "Server",
         "FieldName": "server_use_auth",
         "InputType": "checkbox",
@@ -61,7 +61,7 @@
     },
     {
         "DisplayName": "Persist Accounts",
-        "Description": "Persist account data like credits/playtime",
+        "Description": "Save account metadata (credits, playtime, rights, etc.) to the database. Does NOT affect character saves like stats or inventory (those are always files). Requires a working database. Set true for production.",
         "Category": "Server",
         "FieldName": "server_persist_accounts",
         "InputType": "checkbox",
@@ -70,7 +70,7 @@
     },
     {
         "DisplayName": "No-Auth Default Admin",
-        "Description": "When auth is off, players are admins by default",
+        "Description": "When Use Authentication is off, give every player admin rights by default. Useful for single-player testing; turn off for any shared server.",
         "Category": "Server",
         "FieldName": "server_noauth_default_admin",
         "InputType": "checkbox",
@@ -79,7 +79,7 @@
     },
     {
         "DisplayName": "Daily Accounts Per IP",
-        "Description": "Max different accounts per IP per day",
+        "Description": "Maximum number of different accounts a single IP can log into per day. Helps limit multi-accounting from one connection.",
         "Category": "Server",
         "FieldName": "server_daily_accounts_per_ip",
         "InputType": "number",
@@ -88,7 +88,7 @@
     },
     {
         "DisplayName": "Watchdog Enabled",
-        "Description": "Check external URLs to detect offline state",
+        "Description": "Periodically check external URLs to detect if the host is offline. Disable if you do not want outbound connectivity checks or see false offline warnings.",
         "Category": "Server",
         "FieldName": "server_watchdog_enabled",
         "InputType": "checkbox",
@@ -97,7 +97,7 @@
     },
     {
         "DisplayName": "Connectivity Check URLs",
-        "Description": "Comma-separated URLs for watchdog",
+        "Description": "Comma-separated list of URLs the watchdog pings (e.g. https://google.com,https://2009scape.org). Only used when Watchdog is enabled.",
         "Category": "Server",
         "FieldName": "server_connectivity_check_url",
         "InputType": "text",
@@ -106,7 +106,7 @@
     },
     {
         "DisplayName": "Connectivity Timeout (ms)",
-        "Description": "Watchdog timeout in milliseconds",
+        "Description": "How long (milliseconds) the watchdog waits for each URL. Raise this (e.g. 2000–5000) if you see false 'Are we offline?' messages.",
         "Category": "Server",
         "FieldName": "server_connectivity_timeout",
         "InputType": "number",
@@ -115,7 +115,7 @@
     },
     {
         "DisplayName": "WebSocket Enabled",
-        "Description": "Enable websocket listener for browser clients",
+        "Description": "Enable a WebSocket listener for browser clients. Uses the same binary game protocol as TCP; each binary frame is treated as a byte chunk.",
         "Category": "Server",
         "FieldName": "server_websocket_enabled",
         "InputType": "checkbox",
@@ -124,7 +124,7 @@
     },
     {
         "DisplayName": "WebSocket Port",
-        "Description": "0 = default 53594 + world_id",
+        "Description": "WebSocket listen port. Leave at 0 to use the default of 53594 + world_id (world 1 = 53595).",
         "Category": "Server",
         "FieldName": "server_websocket_port",
         "InputType": "number",
@@ -133,7 +133,7 @@
     },
     {
         "DisplayName": "WebSocket TLS Enabled",
-        "Description": "Enable WSS for browser clients",
+        "Description": "Enable TLS on the WebSocket listener so browser clients can connect with wss:// (required for many PWA/HTTPS setups).",
         "Category": "Server",
         "FieldName": "server_websocket_tls_enabled",
         "InputType": "checkbox",
@@ -142,7 +142,7 @@
     },
     {
         "DisplayName": "WebSocket TLS Keystore Path",
-        "Description": "PKCS12 keystore path",
+        "Description": "Path to a PKCS12 keystore for WebSocket TLS, e.g. certs/dev-wss.p12. Only needed when WebSocket TLS is enabled.",
         "Category": "Server",
         "FieldName": "server_websocket_tls_keystore_path",
         "InputType": "text",
@@ -151,7 +151,7 @@
     },
     {
         "DisplayName": "WebSocket TLS Keystore Password",
-        "Description": "PKCS12 password (blank if empty)",
+        "Description": "Password for the PKCS12 keystore. Leave blank if the keystore was exported with an empty password.",
         "Category": "Server",
         "FieldName": "server_websocket_tls_keystore_password",
         "InputType": "password",
@@ -160,7 +160,7 @@
     },
     {
         "DisplayName": "Database Name",
-        "Description": "MySQL/MariaDB database name",
+        "Description": "MySQL/MariaDB database name used for auth and account persistence (often global). Must exist and contain the imported schema before enabling auth.",
         "Category": "Database",
         "FieldName": "database_database_name",
         "InputType": "text",
@@ -169,7 +169,7 @@
     },
     {
         "DisplayName": "Database Username",
-        "Description": "Database user",
+        "Description": "Database user the server connects as. Needs full access to the configured database.",
         "Category": "Database",
         "FieldName": "database_database_username",
         "InputType": "text",
@@ -178,7 +178,7 @@
     },
     {
         "DisplayName": "Database Password",
-        "Description": "Database password",
+        "Description": "Password for the database user. Leave empty only for local root with no password (not recommended).",
         "Category": "Database",
         "FieldName": "database_database_password",
         "InputType": "password",
@@ -187,7 +187,7 @@
     },
     {
         "DisplayName": "Database Address",
-        "Description": "Database host",
+        "Description": "Hostname or IP of the database server. Use 127.0.0.1 when MariaDB is on the same machine as AMP.",
         "Category": "Database",
         "FieldName": "database_database_address",
         "InputType": "text",
@@ -196,7 +196,7 @@
     },
     {
         "DisplayName": "Database Port",
-        "Description": "Database port",
+        "Description": "Database port (default MySQL/MariaDB is 3306). Stored as a string in the server config.",
         "Category": "Database",
         "FieldName": "database_database_port",
         "InputType": "text",
@@ -205,7 +205,7 @@
     },
     {
         "DisplayName": "Grafana Logging",
-        "Description": "Enable Grafana logging",
+        "Description": "Enable Grafana-oriented logging for metrics/analytics pipelines. Most private servers can leave this off.",
         "Category": "Integrations",
         "FieldName": "integrations_grafana_logging",
         "InputType": "checkbox",
@@ -214,7 +214,7 @@
     },
     {
         "DisplayName": "Grafana Log Path",
-        "Description": "Path for Grafana logs",
+        "Description": "Directory for Grafana log output. @data is replaced with the configured data_path.",
         "Category": "Integrations",
         "FieldName": "integrations_grafana_log_path",
         "InputType": "text",
@@ -223,7 +223,7 @@
     },
     {
         "DisplayName": "Grafana Log TTL Days",
-        "Description": "Days to keep Grafana log data",
+        "Description": "How many days of Grafana log data to keep. Older data is pruned once on startup.",
         "Category": "Integrations",
         "FieldName": "integrations_grafana_log_ttl_days",
         "InputType": "number",
@@ -232,7 +232,7 @@
     },
     {
         "DisplayName": "World Name",
-        "Description": "Name of the world as shown to players",
+        "Description": "Display name of the world shown to players and used in startup logs (e.g. AmiliousScape started in ...).",
         "Category": "World",
         "FieldName": "world_name",
         "InputType": "text",
@@ -241,7 +241,7 @@
     },
     {
         "DisplayName": "World Name (GE)",
-        "Description": "Name used for GE bot announcements",
+        "Description": "Name used in Grand Exchange announcements when bots sell items. Often the same as World Name.",
         "Category": "World",
         "FieldName": "world_name_ge",
         "InputType": "text",
@@ -250,7 +250,7 @@
     },
     {
         "DisplayName": "Debug Mode",
-        "Description": "Enable debug mode",
+        "Description": "Enable debug mode on the game world. Produces extra diagnostics; leave on for testing, consider off for a polished public world.",
         "Category": "World",
         "FieldName": "world_debug",
         "InputType": "checkbox",
@@ -259,7 +259,7 @@
     },
     {
         "DisplayName": "Dev Mode",
-        "Description": "Enable developer mode",
+        "Description": "Enable developer mode. Intended for local development; typically left off for production hosts.",
         "Category": "World",
         "FieldName": "world_dev",
         "InputType": "checkbox",
@@ -268,7 +268,7 @@
     },
     {
         "DisplayName": "Start GUI",
-        "Description": "Start server GUI",
+        "Description": "Start the desktop server GUI. Not useful on a headless AMP host; leave off.",
         "Category": "World",
         "FieldName": "world_start_gui",
         "InputType": "checkbox",
@@ -277,7 +277,7 @@
     },
     {
         "DisplayName": "Daily Restart",
-        "Description": "Enable daily restart",
+        "Description": "Enable the server's built-in daily restart behaviour. Prefer AMP schedules if you want controlled restarts.",
         "Category": "World",
         "FieldName": "world_daily_restart",
         "InputType": "checkbox",
@@ -286,7 +286,7 @@
     },
     {
         "DisplayName": "World ID",
-        "Description": "World number",
+        "Description": "Numeric world id shown to the client and used for things like default WebSocket port offset. Usually 1 for a single-world host.",
         "Category": "World",
         "FieldName": "world_world_id",
         "InputType": "text",
@@ -295,7 +295,7 @@
     },
     {
         "DisplayName": "Country ID",
-        "Description": "Country id for world list",
+        "Description": "Country index for the world list flag/icon. 0 is the common default for private servers.",
         "Category": "World",
         "FieldName": "world_country_id",
         "InputType": "text",
@@ -304,7 +304,7 @@
     },
     {
         "DisplayName": "Members World",
-        "Description": "Members world flag",
+        "Description": "Mark this world as members. Controls members-only content and the members flag on the world list.",
         "Category": "World",
         "FieldName": "world_members",
         "InputType": "checkbox",
@@ -313,7 +313,7 @@
     },
     {
         "DisplayName": "Activity Text",
-        "Description": "Text shown on the world list",
+        "Description": "Short activity description shown on the world list (e.g. 2009Scape Classic.).",
         "Category": "World",
         "FieldName": "world_activity",
         "InputType": "text",
@@ -322,7 +322,7 @@
     },
     {
         "DisplayName": "PvP World",
-        "Description": "PvP world flag",
+        "Description": "Flag this as a PvP world. Affects world-list presentation and PvP-oriented rules where the server checks this flag.",
         "Category": "World",
         "FieldName": "world_pvp",
         "InputType": "checkbox",
@@ -331,7 +331,7 @@
     },
     {
         "DisplayName": "Enable Default Clan",
-        "Description": "Auto-join default clan",
+        "Description": "Automatically join players to a default clan. Requires an account with the same name as World Name that already has a clan set up.",
         "Category": "World",
         "FieldName": "world_enable_default_clan",
         "InputType": "checkbox",
@@ -340,7 +340,7 @@
     },
     {
         "DisplayName": "Enable Bots",
-        "Description": "Spawn NPC bots",
+        "Description": "Spawn NPC adventure bots in the world. Makes the world feel more populated; uses CPU and the Max Adv Bots limit.",
         "Category": "World",
         "FieldName": "world_enable_bots",
         "InputType": "checkbox",
@@ -349,7 +349,7 @@
     },
     {
         "DisplayName": "MOTW Identifier",
-        "Description": "Message of the week model ID (0 = random)",
+        "Description": "Message of the Week model ID. 0 picks a random model.",
         "Category": "World",
         "FieldName": "world_motw_identifier",
         "InputType": "text",
@@ -358,7 +358,7 @@
     },
     {
         "DisplayName": "MOTW Text",
-        "Description": "Message of the week text (@name replaced)",
+        "Description": "Message of the Week text. @name is replaced with the World Name value.",
         "Category": "World",
         "FieldName": "world_motw_text",
         "InputType": "text",
@@ -367,7 +367,7 @@
     },
     {
         "DisplayName": "New Player Location",
-        "Description": "Spawn coords x,y,z",
+        "Description": "Coordinates where new players spawn, as x,y,z (default Tutorial Island area 3094,3107,0).",
         "Category": "World",
         "FieldName": "world_new_player_location",
         "InputType": "text",
@@ -376,7 +376,7 @@
     },
     {
         "DisplayName": "Home Location",
-        "Description": "Home teleport coords x,y,z",
+        "Description": "Coordinates for Home Teleport, as x,y,z (default Lumbridge 3222,3218,0).",
         "Category": "World",
         "FieldName": "world_home_location",
         "InputType": "text",
@@ -385,7 +385,7 @@
     },
     {
         "DisplayName": "Autostock GE",
-        "Description": "Autostock Grand Exchange",
+        "Description": "Automatically restock Grand Exchange offers. Useful on quiet private servers so the GE is not empty.",
         "Category": "Gameplay",
         "FieldName": "world_autostock_ge",
         "InputType": "checkbox",
@@ -394,7 +394,7 @@
     },
     {
         "DisplayName": "Allow Token Purchase",
-        "Description": "Allow token purchase",
+        "Description": "Allow purchasing of in-game tokens where that content exists. Leave off unless you intentionally use that system.",
         "Category": "Gameplay",
         "FieldName": "world_allow_token_purchase",
         "InputType": "checkbox",
@@ -403,7 +403,7 @@
     },
     {
         "DisplayName": "Skillcape Perks",
-        "Description": "Enable skillcape perks",
+        "Description": "Enable 2009Scape skillcape perk effects (inauthentic QoL bonuses on skillcapes, similar to later OSRS-style perks).",
         "Category": "Gameplay",
         "FieldName": "world_skillcape_perks",
         "InputType": "checkbox",
@@ -412,7 +412,7 @@
     },
     {
         "DisplayName": "Increased Door Time",
-        "Description": "Increased door time",
+        "Description": "Increase how long doors stay open. Small QoL change; leave off for more authentic behaviour.",
         "Category": "Gameplay",
         "FieldName": "world_increased_door_time",
         "InputType": "checkbox",
@@ -421,7 +421,7 @@
     },
     {
         "DisplayName": "Enable Botting",
-        "Description": "Enable botting",
+        "Description": "Enable botting-related features/scripts support on the server. Intended for singleplayer-style use; leave off on public worlds.",
         "Category": "Gameplay",
         "FieldName": "world_enable_botting",
         "InputType": "checkbox",
@@ -430,7 +430,7 @@
     },
     {
         "DisplayName": "Max Adv Bots",
-        "Description": "Maximum adventure bots",
+        "Description": "Maximum number of adventure bots the server will maintain when Enable Bots is on.",
         "Category": "Gameplay",
         "FieldName": "world_max_adv_bots",
         "InputType": "number",
@@ -439,7 +439,7 @@
     },
     {
         "DisplayName": "Doubling Money Scammers",
-        "Description": "Enable doubling money scammers",
+        "Description": "Spawn the classic doubling-money scammer NPCs. Authentic flavour content from the era.",
         "Category": "Gameplay",
         "FieldName": "world_enable_doubling_money_scammers",
         "InputType": "checkbox",
@@ -448,7 +448,7 @@
     },
     {
         "DisplayName": "Wilderness PvP",
-        "Description": "Enable wilderness PvP",
+        "Description": "Allow player-vs-player combat in the Wilderness. Turn on for a normal multiplayer wilderness experience.",
         "Category": "Gameplay",
         "FieldName": "world_wild_pvp_enabled",
         "InputType": "checkbox",
@@ -457,7 +457,7 @@
     },
     {
         "DisplayName": "Jad Practice",
-        "Description": "Enable Jad practice",
+        "Description": "Enable Jad practice content so players can train against Jad outside a full fight-cave run.",
         "Category": "Gameplay",
         "FieldName": "world_jad_practice_enabled",
         "InputType": "checkbox",
@@ -466,7 +466,7 @@
     },
     {
         "DisplayName": "Global Chat",
-        "Description": "Enable global chat",
+        "Description": "Enable global chat. Players send global messages with //prefix and can mute it with ::muteglobal. Lets people talk across clans.",
         "Category": "Gameplay",
         "FieldName": "world_enable_global_chat",
         "InputType": "checkbox",
@@ -475,7 +475,7 @@
     },
     {
         "DisplayName": "GE Announcement Limit",
-        "Description": "Min HA value for GE bot announcements",
+        "Description": "Minimum high-alchemy value before bot GE sales are announced in-game. Higher values mean fewer announcements.",
         "Category": "Gameplay",
         "FieldName": "world_ge_announcement_limit",
         "InputType": "number",
@@ -484,7 +484,7 @@
     },
     {
         "DisplayName": "Castle Wars",
-        "Description": "Enable Castle Wars",
+        "Description": "Enable Castle Wars minigame content. Leave off if you do not want that activity available.",
         "Category": "Gameplay",
         "FieldName": "world_enable_castle_wars",
         "InputType": "checkbox",
@@ -493,7 +493,7 @@
     },
     {
         "DisplayName": "Personalized Shops",
-        "Description": "Personalized shops",
+        "Description": "Enable personalized shop stock behaviour (shops can vary per player). Inauthentic QoL; default off.",
         "Category": "Gameplay",
         "FieldName": "world_personalized_shops",
         "InputType": "checkbox",
@@ -502,7 +502,7 @@
     },
     {
         "DisplayName": "Bots Influence GE Price",
-        "Description": "Bots influence GE prices",
+        "Description": "Allow adventure bots' GE activity to influence prices. Makes the economy feel more alive when bots are enabled.",
         "Category": "Gameplay",
         "FieldName": "world_bots_influence_ge_price",
         "InputType": "checkbox",
@@ -511,7 +511,7 @@
     },
     {
         "DisplayName": "Verbose Cutscene",
-        "Description": "Verbose cutscene logging",
+        "Description": "Extra logging for the newer cutscene system. Only useful when debugging cutscene issues.",
         "Category": "Gameplay",
         "FieldName": "world_verbose_cutscene",
         "InputType": "checkbox",
@@ -520,7 +520,7 @@
     },
     {
         "DisplayName": "Show Rules",
-        "Description": "Show rules on first login",
+        "Description": "Show the rules interface the first time a player logs in.",
         "Category": "Gameplay",
         "FieldName": "world_show_rules",
         "InputType": "checkbox",
@@ -529,7 +529,7 @@
     },
     {
         "DisplayName": "Revenant Population",
-        "Description": "Number of active revenants",
+        "Description": "How many revenants should be active at once in the wilderness. Set 0 to effectively disable them.",
         "Category": "Gameplay",
         "FieldName": "world_revenant_population",
         "InputType": "number",
@@ -538,7 +538,7 @@
     },
     {
         "DisplayName": "I Want To Cheat",
-        "Description": "GE auto-buy/auto-sell",
+        "Description": "Enable Grand Exchange auto-buy/auto-sell cheat behaviour. Intended for testing or singleplayer; do not enable on a serious multiplayer economy.",
         "Category": "Gameplay",
         "FieldName": "world_i_want_to_cheat",
         "InputType": "checkbox",
@@ -547,7 +547,7 @@
     },
     {
         "DisplayName": "Better Agility Pyramid GP",
-        "Description": "Better agility pyramid GP reward",
+        "Description": "Use the improved Agility Pyramid GP formula: 1000 + ((agility level / 99) * 9000). Inauthentic but smoother reward scaling.",
         "Category": "Gameplay",
         "FieldName": "world_better_agility_pyramid_gp",
         "InputType": "checkbox",
@@ -556,7 +556,7 @@
     },
     {
         "DisplayName": "Better DFS",
-        "Description": "Better dragonfire shield (30s cooldown)",
+        "Description": "Shorten Dragonfire Shield special attack cooldown to 30 seconds instead of 2 minutes. Inauthentic combat QoL.",
         "Category": "Gameplay",
         "FieldName": "world_better_dfs",
         "InputType": "checkbox",
@@ -565,7 +565,7 @@
     },
     {
         "DisplayName": "New Player Announcement",
-        "Description": "Announce new players",
+        "Description": "Broadcast a message when a brand-new player joins the world.",
         "Category": "Gameplay",
         "FieldName": "world_new_player_announcement",
         "InputType": "checkbox",
@@ -574,7 +574,7 @@
     },
     {
         "DisplayName": "Candlelight Random",
-        "Description": "Inauthentic candlelight random",
+        "Description": "Enable the inauthentic candlelight random event in addition to normal random events.",
         "Category": "Gameplay",
         "FieldName": "world_inauthentic_candlelight_random",
         "InputType": "checkbox",
@@ -583,7 +583,7 @@
     },
     {
         "DisplayName": "Holiday Event Randoms",
-        "Description": "Holiday random events",
+        "Description": "Enable holiday-themed random events. Does not change normal random events. Use with the force flags below if you want a specific holiday.",
         "Category": "Gameplay",
         "FieldName": "world_holiday_event_randoms",
         "InputType": "checkbox",
@@ -592,7 +592,7 @@
     },
     {
         "DisplayName": "Force Halloween Randoms",
-        "Description": "Force Halloween randoms",
+        "Description": "Force Halloween random events. Only enable one force-* holiday option at a time.",
         "Category": "Gameplay",
         "FieldName": "world_force_halloween_randoms",
         "InputType": "checkbox",
@@ -601,7 +601,7 @@
     },
     {
         "DisplayName": "Force Christmas Randoms",
-        "Description": "Force Christmas randoms",
+        "Description": "Force Christmas random events. Only enable one force-* holiday option at a time.",
         "Category": "Gameplay",
         "FieldName": "world_force_christmas_randoms",
         "InputType": "checkbox",
@@ -610,7 +610,7 @@
     },
     {
         "DisplayName": "April Fools Event",
-        "Description": "Inauthentic April Fools event",
+        "Description": "Enable the inauthentic April Fools event content.",
         "Category": "Gameplay",
         "FieldName": "world_april_fools_event",
         "InputType": "checkbox",
@@ -619,7 +619,7 @@
     },
     {
         "DisplayName": "Force April Fools",
-        "Description": "Force April Fools",
+        "Description": "Force April Fools content regardless of date. Use with care on a live world.",
         "Category": "Gameplay",
         "FieldName": "world_force_april_fools",
         "InputType": "checkbox",
@@ -628,7 +628,7 @@
     },
     {
         "DisplayName": "Runecrafting Formula Revision",
-        "Description": "530 / 573 / 581",
+        "Description": "Which runecrafting multiple-rune formula to use. 530 = classic; 573 introduced probabilistic multiple runes; 581 extrapolates past 99.",
         "Category": "Gameplay",
         "FieldName": "world_runecrafting_formula_revision",
         "InputType": "number",
@@ -637,7 +637,7 @@
     },
     {
         "DisplayName": "Enhanced Deep Wilderness",
-        "Description": "Enhanced deep wilderness red skull",
+        "Description": "Past the members' fence, apply a red skull that boosts brawler/PvP drop rates. Inauthentic deep-wild enhancement.",
         "Category": "Gameplay",
         "FieldName": "world_enhanced_deep_wilderness",
         "InputType": "checkbox",
@@ -646,7 +646,7 @@
     },
     {
         "DisplayName": "Wilderness Exclusive Loot",
-        "Description": "Wilderness-exclusive loot from revs/C.Ele",
+        "Description": "Allow wilderness-exclusive loot such as brawling gloves and PvP gear from revenants and the Chaos Elemental.",
         "Category": "Gameplay",
         "FieldName": "world_wilderness_exclusive_loot",
         "InputType": "checkbox",
@@ -655,7 +655,7 @@
     },
     {
         "DisplayName": "XP Rates Option",
-        "Description": "XP rates option on Tutorial Island",
+        "Description": "Show the XP rate selection option on Tutorial Island (e.g. 1x / 2.5x / 5x). Turn on if players should choose their rate.",
         "Category": "Gameplay",
         "FieldName": "world_xp_rates",
         "InputType": "checkbox",
@@ -664,7 +664,7 @@
     },
     {
         "DisplayName": "Ironman Option",
-        "Description": "Ironman on Tutorial Island",
+        "Description": "Show ironman mode options on Tutorial Island and enable chat icons for ironmen (inauthentic protocol addition).",
         "Category": "Gameplay",
         "FieldName": "world_ironman",
         "InputType": "checkbox",
@@ -673,7 +673,7 @@
     },
     {
         "DisplayName": "Shooting Star Ring",
-        "Description": "Ancient blueprint / star sprite ring",
+        "Description": "Enable custom-content ancient blueprint and Ring of the Star Sprite rewards from shooting stars.",
         "Category": "Gameplay",
         "FieldName": "world_shooting_star_ring",
         "InputType": "checkbox",
@@ -682,7 +682,7 @@
     },
     {
         "DisplayName": "Ring of Wealth Teleport",
-        "Description": "Inauthentic RoW teleport",
+        "Description": "Enable the inauthentic teleport option on the Ring of Wealth.",
         "Category": "Gameplay",
         "FieldName": "world_ring_of_wealth_teleport",
         "InputType": "checkbox",
@@ -691,7 +691,7 @@
     },
     {
         "DisplayName": "Second Bank",
-        "Description": "Enable second bank",
+        "Description": "Allow players to use a second bank. Major QoL / inauthentic storage expansion.",
         "Category": "Gameplay",
         "FieldName": "world_second_bank",
         "InputType": "checkbox",
@@ -700,7 +700,7 @@
     },
     {
         "DisplayName": "Player Commands",
-        "Description": "Extra non-dangerous player commands",
+        "Description": "Enable extra non-dangerous commands for regular (non-admin) players. Inauthentic convenience commands.",
         "Category": "Gameplay",
         "FieldName": "world_player_commands",
         "InputType": "checkbox",
@@ -709,7 +709,7 @@
     },
     {
         "DisplayName": "Boosted Trawler Rewards",
-        "Description": "Boosted fishing trawler rewards",
+        "Description": "Boost Fishing Trawler rewards with key halves and pirate outfit pieces. Inauthentic higher-value trawler loot.",
         "Category": "Gameplay",
         "FieldName": "world_boosted_trawler_rewards",
         "InputType": "checkbox",
@@ -718,7 +718,7 @@
     },
     {
         "DisplayName": "Data Path",
-        "Description": "Path to data folder",
+        "Description": "Base folder for game data. Other paths can use @data which is replaced with this value. Default is data under the Server directory.",
         "Category": "Paths",
         "FieldName": "paths_data_path",
         "InputType": "text",
@@ -727,7 +727,7 @@
     },
     {
         "DisplayName": "Cache Path",
-        "Description": "Cache path (@data supported)",
+        "Description": "Path to the cache. @data is replaced with Data Path. Do not change unless you know why.",
         "Category": "Paths",
         "FieldName": "paths_cache_path",
         "InputType": "text",
@@ -736,7 +736,7 @@
     },
     {
         "DisplayName": "Store Path",
-        "Description": "Server store path",
+        "Description": "Path to the server store. @data is replaced with Data Path.",
         "Category": "Paths",
         "FieldName": "paths_store_path",
         "InputType": "text",
@@ -745,7 +745,7 @@
     },
     {
         "DisplayName": "Save Path",
-        "Description": "Player saves path",
+        "Description": "Directory where player character JSON saves are written. Critical to back up.",
         "Category": "Paths",
         "FieldName": "paths_save_path",
         "InputType": "text",
@@ -754,7 +754,7 @@
     },
     {
         "DisplayName": "Configs Path",
-        "Description": "Configs path",
+        "Description": "Path to JSON/XML game config files (items, NPCs, shops, etc.).",
         "Category": "Paths",
         "FieldName": "paths_configs_path",
         "InputType": "text",
@@ -763,7 +763,7 @@
     },
     {
         "DisplayName": "Grand Exchange Data Path",
-        "Description": "GE data path",
+        "Description": "Where Grand Exchange / economy data is stored.",
         "Category": "Paths",
         "FieldName": "paths_grand_exchange_data_path",
         "InputType": "text",
@@ -772,7 +772,7 @@
     },
     {
         "DisplayName": "Rare Drop Table Path",
-        "Description": "RDT xml path",
+        "Description": "XML file defining the rare drop table (RDT).",
         "Category": "Paths",
         "FieldName": "paths_rare_drop_table_path",
         "InputType": "text",
@@ -781,7 +781,7 @@
     },
     {
         "DisplayName": "C.Ele Drop Table Path",
-        "Description": "Chaos Elemental drop table path",
+        "Description": "XML file defining the Chaos Elemental minor drop table.",
         "Category": "Paths",
         "FieldName": "paths_cele_drop_table_path",
         "InputType": "text",
@@ -790,7 +790,7 @@
     },
     {
         "DisplayName": "Uncommon Seed Drop Table Path",
-        "Description": "USDT path",
+        "Description": "XML file defining the uncommon seed drop table (USDT).",
         "Category": "Paths",
         "FieldName": "paths_uncommon_seed_drop_table_path",
         "InputType": "text",
@@ -799,7 +799,7 @@
     },
     {
         "DisplayName": "Herb Drop Table Path",
-        "Description": "HDT path",
+        "Description": "XML file defining the herb drop table (HDT).",
         "Category": "Paths",
         "FieldName": "paths_herb_drop_table_path",
         "InputType": "text",
@@ -808,7 +808,7 @@
     },
     {
         "DisplayName": "Gem Drop Table Path",
-        "Description": "GDT path",
+        "Description": "XML file defining the gem drop table (GDT).",
         "Category": "Paths",
         "FieldName": "paths_gem_drop_table_path",
         "InputType": "text",
@@ -817,7 +817,7 @@
     },
     {
         "DisplayName": "Rare Seed Drop Table Path",
-        "Description": "RSDT path",
+        "Description": "XML file defining the rare seed drop table (RSDT).",
         "Category": "Paths",
         "FieldName": "paths_rare_seed_drop_table_path",
         "InputType": "text",
@@ -826,7 +826,7 @@
     },
     {
         "DisplayName": "Allotment Seed Drop Table Path",
-        "Description": "ASDT path",
+        "Description": "XML file defining the allotment seed drop table (ASDT).",
         "Category": "Paths",
         "FieldName": "paths_allotment_seed_drop_table_path",
         "InputType": "text",
@@ -835,7 +835,7 @@
     },
     {
         "DisplayName": "Object Parser Path",
-        "Description": "ObjectParser.xml path",
+        "Description": "XML file with boot-time object changes applied when the server starts.",
         "Category": "Paths",
         "FieldName": "paths_object_parser_path",
         "InputType": "text",
@@ -844,7 +844,7 @@
     },
     {
         "DisplayName": "Logs Path",
-        "Description": "Logs path",
+        "Description": "Directory where server log files are written when Write Logs is enabled.",
         "Category": "Paths",
         "FieldName": "paths_logs_path",
         "InputType": "text",
@@ -853,7 +853,7 @@
     },
     {
         "DisplayName": "Bot Data Path",
-        "Description": "Bot data path",
+        "Description": "Directory for adventure-bot related data files.",
         "Category": "Paths",
         "FieldName": "paths_bot_data",
         "InputType": "text",
@@ -862,7 +862,7 @@
     },
     {
         "DisplayName": "Eco Data Path",
-        "Description": "Economy data path",
+        "Description": "Directory for economy-related data (often shared with GE data).",
         "Category": "Paths",
         "FieldName": "paths_eco_data",
         "InputType": "text",
