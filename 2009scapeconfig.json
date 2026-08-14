@@ -803,7 +803,6 @@
         "InputType": "text",
         "ParamFieldName": "paths_data_path",
         "DefaultValue": "data",
-        "Hidden": true,
         "Subcategory": "Advanced:folder:6"
     },
     {
@@ -814,7 +813,6 @@
         "InputType": "text",
         "ParamFieldName": "paths_cache_path",
         "DefaultValue": "@data/cache",
-        "Hidden": true,
         "Subcategory": "Advanced:folder:6"
     },
     {
@@ -825,7 +823,6 @@
         "InputType": "text",
         "ParamFieldName": "paths_store_path",
         "DefaultValue": "@data/serverstore",
-        "Hidden": true,
         "Subcategory": "Advanced:folder:6"
     },
     {
@@ -836,7 +833,6 @@
         "InputType": "text",
         "ParamFieldName": "paths_save_path",
         "DefaultValue": "@data/players",
-        "Hidden": true,
         "Subcategory": "Advanced:folder:6"
     },
     {
@@ -847,7 +843,6 @@
         "InputType": "text",
         "ParamFieldName": "paths_configs_path",
         "DefaultValue": "@data/configs",
-        "Hidden": true,
         "Subcategory": "Advanced:folder:6"
     },
     {
@@ -858,7 +853,6 @@
         "InputType": "text",
         "ParamFieldName": "paths_grand_exchange_data_path",
         "DefaultValue": "@data/eco",
-        "Hidden": true,
         "Subcategory": "Advanced:folder:6"
     },
     {
@@ -869,7 +863,6 @@
         "InputType": "text",
         "ParamFieldName": "paths_rare_drop_table_path",
         "DefaultValue": "@data/configs/shared_tables/RDT.xml",
-        "Hidden": true,
         "Subcategory": "Advanced:folder:6"
     },
     {
@@ -880,7 +873,6 @@
         "InputType": "text",
         "ParamFieldName": "paths_cele_drop_table_path",
         "DefaultValue": "@data/configs/shared_tables/CELEDT.xml",
-        "Hidden": true,
         "Subcategory": "Advanced:folder:6"
     },
     {
@@ -891,7 +883,6 @@
         "InputType": "text",
         "ParamFieldName": "paths_uncommon_seed_drop_table_path",
         "DefaultValue": "@data/configs/shared_tables/USDT.xml",
-        "Hidden": true,
         "Subcategory": "Advanced:folder:6"
     },
     {
@@ -902,7 +893,6 @@
         "InputType": "text",
         "ParamFieldName": "paths_herb_drop_table_path",
         "DefaultValue": "@data/configs/shared_tables/HDT.xml",
-        "Hidden": true,
         "Subcategory": "Advanced:folder:6"
     },
     {
@@ -913,7 +903,6 @@
         "InputType": "text",
         "ParamFieldName": "paths_gem_drop_table_path",
         "DefaultValue": "@data/configs/shared_tables/GDT.xml",
-        "Hidden": true,
         "Subcategory": "Advanced:folder:6"
     },
     {
@@ -924,7 +913,6 @@
         "InputType": "text",
         "ParamFieldName": "paths_rare_seed_drop_table_path",
         "DefaultValue": "@data/configs/shared_tables/RSDT.xml",
-        "Hidden": true,
         "Subcategory": "Advanced:folder:6"
     },
     {
@@ -935,7 +923,6 @@
         "InputType": "text",
         "ParamFieldName": "paths_allotment_seed_drop_table_path",
         "DefaultValue": "@data/configs/shared_tables/ASDT.xml",
-        "Hidden": true,
         "Subcategory": "Advanced:folder:6"
     },
     {
@@ -946,7 +933,6 @@
         "InputType": "text",
         "ParamFieldName": "paths_object_parser_path",
         "DefaultValue": "@data/ObjectParser.xml",
-        "Hidden": true,
         "Subcategory": "Advanced:folder:6"
     },
     {
@@ -957,7 +943,6 @@
         "InputType": "text",
         "ParamFieldName": "paths_logs_path",
         "DefaultValue": "@data/logs",
-        "Hidden": true,
         "Subcategory": "Advanced:folder:6"
     },
     {
@@ -968,7 +953,6 @@
         "InputType": "text",
         "ParamFieldName": "paths_bot_data",
         "DefaultValue": "@data/botdata",
-        "Hidden": true,
         "Subcategory": "Advanced:folder:6"
     },
     {
@@ -979,7 +963,6 @@
         "InputType": "text",
         "ParamFieldName": "paths_eco_data",
         "DefaultValue": "@data/eco",
-        "Hidden": true,
         "Subcategory": "Advanced:folder:6"
     }
 ]
