@@ -1,11 +1,11 @@
 [
     {
         "UpdateStageName": "Prerequisites",
-        "UpdateStageDescription": "Verify Git, Git LFS, Python 3, and Java 11 are available",
+        "UpdateStageDescription": "Verify Git, Git LFS, and Java 11",
         "UpdateSourcePlatform": "Linux",
         "UpdateSource": "Executable",
         "UpdateSourceData": "/bin/bash",
-        "UpdateSourceArgs": "-c \"set -e; echo '=== 2009Scape Prerequisites Check ==='; MISSING=0; if ! command -v git >/dev/null 2>&1; then echo 'ERROR: git is not installed'; MISSING=1; else echo 'Git OK'; fi; if ! command -v git-lfs >/dev/null 2>&1; then echo 'ERROR: git-lfs is not installed'; MISSING=1; else echo 'Git LFS OK'; fi; if ! command -v python3 >/dev/null 2>&1; then echo 'ERROR: python3 is not installed (needed to seed settings and apply config)'; MISSING=1; else echo 'Python 3 OK'; python3 --version; fi; if [ ! -x /usr/lib/jvm/temurin-11-jdk-amd64/bin/java ]; then echo 'ERROR: Java 11 (temurin-11-jdk-amd64) not found at expected path'; MISSING=1; else echo 'Java 11 OK'; /usr/lib/jvm/temurin-11-jdk-amd64/bin/java -version 2>&1 | head -n1; fi; if [ $MISSING -ne 0 ]; then echo ''; echo 'One or more required packages are missing.'; echo 'Please run the following on the host as root, then try Update again:'; echo ''; echo '  sudo apt-get update'; echo '  sudo apt-get install -y git git-lfs python3 temurin-11-jdk'; echo ''; exit 1; fi; echo '=== All prerequisites satisfied ==='\""
+        "UpdateSourceArgs": "-c \"set -e; echo '=== 2009Scape Prerequisites Check ==='; MISSING=0; if ! command -v git >/dev/null 2>&1; then echo 'ERROR: git is not installed'; MISSING=1; else echo 'Git OK'; fi; if ! command -v git-lfs >/dev/null 2>&1; then echo 'ERROR: git-lfs is not installed'; MISSING=1; else echo 'Git LFS OK'; fi; if [ ! -x /usr/lib/jvm/temurin-11-jdk-amd64/bin/java ]; then echo 'ERROR: Java 11 (temurin-11-jdk-amd64) not found at expected path'; MISSING=1; else echo 'Java 11 OK'; /usr/lib/jvm/temurin-11-jdk-amd64/bin/java -version 2>&1 | head -n1; fi; if [ $MISSING -ne 0 ]; then echo ''; echo 'One or more required packages are missing.'; echo 'Please run the following on the host as root, then try Update again:'; echo ''; echo '  sudo apt-get update'; echo '  sudo apt-get install -y git git-lfs temurin-11-jdk'; echo ''; exit 1; fi; echo '=== All prerequisites satisfied ==='\""
     },
     {
         "UpdateStageName": "Clone Repository",
@@ -24,11 +24,11 @@
         "UpdateSourceArgs": "-c \"set -e; echo '=== Git LFS + Build ==='; cd 2009scape; git lfs install; git lfs pull; mkdir -p builddir ../config; if [ ! -f ../config/default.conf ]; then echo 'Creating protected config (first run)'; cp -f Server/worldprops/default.conf ../config/default.conf; else echo 'Protected config already exists'; fi; NEED_BUILD=0; if [ ! -f builddir/server.jar ]; then echo 'No server.jar - will build'; NEED_BUILD=1; fi; if [ -f ../.needs_rebuild ]; then echo 'Source changed - will rebuild'; NEED_BUILD=1; rm -f ../.needs_rebuild; fi; if [ \\\"$NEED_BUILD\\\" = \\\"1\\\" ]; then echo 'Running Maven build...'; cd Server; chmod +x mvnw; export JAVA_HOME=/usr/lib/jvm/temurin-11-jdk-amd64; export PATH=\\\"$JAVA_HOME/bin:$PATH\\\"; ./mvnw clean package -DskipTests; JAR=$(find target -name '*-jar-with-dependencies.jar' -o -name 'server*.jar' 2>/dev/null | head -n1); if [ -z \\\"$JAR\\\" ]; then echo 'ERROR: No jar found'; ls -la target/ || true; exit 1; fi; cp -f \\\"$JAR\\\" ../builddir/server.jar; echo 'Build complete'; else echo 'Skipping Maven build'; ls -la builddir/server.jar; fi; echo '=== LFS + Build finished ==='\""
     },
     {
-        "UpdateStageName": "Install Start Helper",
-        "UpdateStageDescription": "Seed amp-settings from default.conf once; install apply-and-start.sh (logs each applied key)",
+        "UpdateStageName": "Install AMP Helper",
+        "UpdateStageDescription": "Fetch amp-helper.jar and install Java start wrapper",
         "UpdateSourcePlatform": "Linux",
         "UpdateSource": "Executable",
         "UpdateSourceData": "/bin/bash",
-        "UpdateSourceArgs": "-c \"set -e; mkdir -p config; if [ ! -f install_helper.py ]; then echo 'Fetching install_helper.py from template repo...'; curl -fsSL https://raw.githubusercontent.com/amilious-ba/2009Scape-Amp-Template/main/install_helper.py -o install_helper.py || wget -qO install_helper.py https://raw.githubusercontent.com/amilious-ba/2009Scape-Amp-Template/main/install_helper.py; fi; python3 install_helper.py; chmod +x apply-and-start.sh; echo Install helper finished\""
+        "UpdateSourceArgs": "-c \"set -e; echo '=== Install AMP Helper ==='; HELPER_URL=https://github.com/amilious-ba/2009Scape-Amp-Template/raw/main/amp-helper.jar; echo Downloading amp-helper.jar...; curl -fsSL -o amp-helper.jar $HELPER_URL || wget -qO amp-helper.jar $HELPER_URL; if [ ! -s amp-helper.jar ]; then echo ERROR: amp-helper.jar missing or empty; exit 1; fi; ls -la amp-helper.jar; printf '%s\\n' '#!/bin/bash' 'set -e' 'ROOT=\"$(cd \"$(dirname \"$0\")\" && pwd)\"' 'JAVA=/usr/lib/jvm/temurin-11-jdk-amd64/bin/java' 'cd \"$ROOT\"' '\"$JAVA\" -jar amp-helper.jar prepare --conf config/default.conf --settings config/amp-settings.cfg --source 2009scape/Server/worldprops/default.conf --sql 2009scape/Server/db_exports/global.sql' 'cd \"$ROOT/2009scape/Server\"' 'exec \"$JAVA\" -Dnashorn.args=--no-deprecation-warning -jar ../builddir/server.jar ../../config/default.conf' > apply-and-start.sh; chmod +x apply-and-start.sh; echo Start wrapper installed; echo '=== AMP Helper ready ==='\""
     }
 ]
