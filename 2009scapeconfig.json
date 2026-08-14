@@ -268,7 +268,7 @@
     },
     {
         "DisplayName": "Start GUI",
-        "Description": "Start the desktop server GUI. Not useful on a headless AMP host; leave off.",
+        "Description": "Start the desktop server GUI window. Leave off on AMP (headless); only useful on a local desktop with a display.",
         "Category": "World",
         "FieldName": "world_start_gui",
         "InputType": "checkbox",
