@@ -96,6 +96,10 @@ public final class Main {
         ConfigTransformer.apply(conf, settings);
         // DB check / import when auth flags set
         DatabaseChecker.check(conf, sql);
+        // Port caveat (server binds fixed ports; AMP panel may show Not Listening)
+        System.out.println("NOTE: Game binds TCP 43594 (game) and 43595 (world list).");
+        System.out.println("NOTE: AMP port auto-increment does not change those binds — one game instance per host is recommended.");
+        System.out.println("NOTE: AMP may show Main Game Port as Not Listening even when players can connect; check with: ss -tlnp | grep 4359");
     }
 
     private static Path requiredPath(Map<String, String> opts, String key) {

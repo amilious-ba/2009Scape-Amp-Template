@@ -16,7 +16,7 @@
     },
     {
         "DisplayName": "Secret Key",
-        "Description": "Shared secret sent by the client on login. Client and server MUST match or connections are refused. Change this if the server is exposed beyond a trusted network.",
+        "Description": "Shared secret sent by the client on login. Client and server MUST match or connections are refused. Use the same value in the client Local server profile. Change this if the server is exposed beyond a trusted network.",
         "Category": "Server",
         "FieldName": "server_secret_key",
         "InputType": "text",
@@ -52,7 +52,7 @@
     },
     {
         "DisplayName": "Use Authentication",
-        "Description": "Require correct passwords (hashed and stored in the database). Must be true for production or any multi-user server. If false, password correctness is ignored. Requires a working database.",
+        "Description": "Require correct passwords (hashed and stored in the database). PRODUCTION: set true for any multi-user or public host. If false, password correctness is ignored. Requires a working database.",
         "Category": "Authentication",
         "FieldName": "server_use_auth",
         "InputType": "checkbox",
@@ -61,7 +61,7 @@
     },
     {
         "DisplayName": "Persist Accounts",
-        "Description": "Save account metadata (credits, playtime, rights, etc.) to the database. Does NOT affect character saves like stats or inventory (those are always files). Requires a working database. Set true for production.",
+        "Description": "Save account metadata (credits, playtime, rights, etc.) to the database. Does NOT affect character saves like stats or inventory (those are always files). PRODUCTION: set true. Requires a working database.",
         "Category": "Authentication",
         "FieldName": "server_persist_accounts",
         "InputType": "checkbox",
@@ -70,7 +70,7 @@
     },
     {
         "DisplayName": "No-Auth Default Admin",
-        "Description": "When Use Authentication is off, give every player admin rights by default. Useful for single-player testing; turn off for any shared server.",
+        "Description": "When Use Authentication is off, give every player admin rights by default. Useful for single-player testing. PRODUCTION / shared servers: turn this off (and turn Use Authentication on).",
         "Category": "Authentication",
         "FieldName": "server_noauth_default_admin",
         "InputType": "checkbox",
@@ -250,7 +250,7 @@
     },
     {
         "DisplayName": "Debug Mode",
-        "Description": "Enable debug mode on the game world. Produces extra diagnostics; leave on for testing, consider off for a polished public world.",
+        "Description": "Enable debug mode on the game world. Extra diagnostics for testing. PRODUCTION: consider off for a polished public world.",
         "Category": "World",
         "FieldName": "world_debug",
         "InputType": "checkbox",
@@ -259,7 +259,7 @@
     },
     {
         "DisplayName": "Dev Mode",
-        "Description": "Enable developer mode. Intended for local development; typically left off for production hosts.",
+        "Description": "Enable developer mode. Intended for local development. PRODUCTION: leave off on public hosts.",
         "Category": "World",
         "FieldName": "world_dev",
         "InputType": "checkbox",
