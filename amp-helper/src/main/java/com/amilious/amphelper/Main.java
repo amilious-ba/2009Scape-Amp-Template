@@ -12,6 +12,8 @@ import java.util.Map;
  *   apply    --conf <default.conf> --settings <amp-settings.cfg>
  *   db       --conf <default.conf> [--sql <global.sql>]
  *   prepare  --conf ... --settings ... [--source ...] [--sql ...]
+ *   backup   --root <instance> --out <file.zip> [--no-db] [--no-players] [--no-eco] [--no-bots] [--no-serverstore] [--no-config]
+ *   restore  --root <instance> --in  <file.zip> [--no-db] [--no-players] [--no-eco] [--no-bots] [--no-serverstore] [--no-config]
  *
  * Exit codes:
  *   0 OK
@@ -44,6 +46,12 @@ public final class Main {
                     break;
                 case "prepare":
                     runPrepare(opts);
+                    break;
+                case "backup":
+                    runBackup(opts);
+                    break;
+                case "restore":
+                    runRestore(opts);
                     break;
                 default:
                     System.err.println("Unknown command: " + command);
@@ -102,6 +110,18 @@ public final class Main {
         System.out.println("NOTE: AMP may show Main Game Port as Not Listening even when players can connect; check with: ss -tlnp | grep 4359");
     }
 
+    private static void runBackup(Map<String, String> opts) throws Exception {
+        Path root = requiredPath(opts, "root");
+        Path out = requiredPath(opts, "out");
+        BackupRestore.backup(root, out, opts);
+    }
+
+    private static void runRestore(Map<String, String> opts) throws Exception {
+        Path root = requiredPath(opts, "root");
+        Path in = requiredPath(opts, "in");
+        BackupRestore.restore(root, in, opts);
+    }
+
     private static Path requiredPath(Map<String, String> opts, String key) {
         if (!opts.containsKey(key) || opts.get(key).isBlank()) {
             throw new HelperException(1, "Missing required option --" + key);
@@ -138,7 +158,10 @@ public final class Main {
         System.out.println("  java -jar amp-helper.jar apply   --conf <default.conf> --settings <amp-settings.cfg>");
         System.out.println("  java -jar amp-helper.jar db      --conf <default.conf> [--sql <global.sql>]");
         System.out.println("  java -jar amp-helper.jar prepare --conf <default.conf> --settings <amp-settings.cfg> [--source ...] [--sql ...]");
+        System.out.println("  java -jar amp-helper.jar backup  --root <instance> --out <file.zip> [--no-db] [--no-players] [--no-eco] [--no-bots] [--no-serverstore] [--no-config]");
+        System.out.println("  java -jar amp-helper.jar restore --root <instance> --in  <file.zip> [--no-db] [--no-players] [--no-eco] [--no-bots] [--no-serverstore] [--no-config]");
         System.out.println();
+        System.out.println("Backup default set: config, players, eco/GE, botdata, serverstore, database dump (from conf credentials).");
         System.out.println("Exit codes: 0=ok 1=config/io 2=db connect 3=db missing 4=import failed");
     }
 

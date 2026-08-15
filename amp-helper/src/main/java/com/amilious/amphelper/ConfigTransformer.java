@@ -20,7 +20,14 @@ import java.util.regex.Pattern;
  */
 public final class ConfigTransformer {
 
-    private static final Set<String> SECRET_KEYS = Set.of("secret_key", "database_password");
+    private static final Set<String> SECRET_KEYS = Set.of(
+            "secret_key",
+            "database_password",
+            "discord_ge_webhook",
+            "discord_moderation_webhook",
+            "openrsc_integration_webhook",
+            "websocket_tls_keystore_password"
+    );
 
     private static final String UI_BANNER =
             "# =============================================================================\n"
@@ -129,7 +136,7 @@ public final class ConfigTransformer {
         }
 
         Map<String, String> pending = loadSettings(settings);
-        List<String> lines = Files.readAllLines(conf, StandardCharsets.UTF_8);
+        List<String> lines = new ArrayList<>(Files.readAllLines(conf, StandardCharsets.UTF_8));
         int changes = 0;
 
         for (Map.Entry<String, String> e : pending.entrySet()) {
@@ -143,12 +150,23 @@ public final class ConfigTransformer {
             String newVal = e.getValue();
 
             boolean inSec = false;
-            Pattern lineRe = Pattern.compile("^([ \\t]*)" + Pattern.quote(key) + "([ \\t]*=[ \\t]*)(.*)$");
+            boolean found = false;
+            int sectionStart = -1;
+            int sectionEnd = lines.size();
+            // Match active or commented key lines: optional #, then key =
+            Pattern lineRe = Pattern.compile("^([ \\t]*)#?[ \\t]*" + Pattern.quote(key) + "([ \\t]*=[ \\t]*)(.*)$");
             for (int i = 0; i < lines.size(); i++) {
                 String line = lines.get(i);
                 String stripped = line.strip();
                 if (stripped.startsWith("[") && stripped.endsWith("]")) {
+                    if (inSec) {
+                        sectionEnd = i;
+                        break;
+                    }
                     inSec = stripped.equals("[" + sec + "]");
+                    if (inSec) {
+                        sectionStart = i;
+                    }
                     continue;
                 }
                 if (!inSec) {
@@ -158,29 +176,49 @@ public final class ConfigTransformer {
                 if (!m.matches()) {
                     continue;
                 }
+                found = true;
                 String indent = m.group(1);
                 String eq = m.group(2);
                 String rest = m.group(3);
-                Matcher vm = Pattern.compile("^(\"[^\"]*\"|[^#]+?)([ \\t]*#.*)?$").matcher(rest);
+                Matcher vm = Pattern.compile("^(\"[^\"]*\"|[^#]*?)([ \\t]*#.*)?$").matcher(rest);
                 if (!vm.matches()) {
                     break;
                 }
                 String oldRaw = vm.group(1).strip();
                 String comment = vm.group(2) != null ? vm.group(2) : "";
                 boolean quoted = oldRaw.startsWith("\"") && oldRaw.endsWith("\"");
-                String oldCmp = quoted ? oldRaw.substring(1, oldRaw.length() - 1) : oldRaw;
-                if (oldCmp.equals(newVal)) {
+                String oldCmp = quoted && oldRaw.length() >= 2
+                        ? oldRaw.substring(1, oldRaw.length() - 1)
+                        : oldRaw;
+                if (oldCmp.equals(newVal) && !line.strip().startsWith("#")) {
                     break;
                 }
-                if (quoted) {
+                // Always write as quoted string for webhook/url-like or non-bool/non-numeric
+                boolean asString = !newVal.equals("true") && !newVal.equals("false")
+                        && !newVal.matches("-?\\d+(\\.\\d+)?");
+                String rendered;
+                if (asString || quoted) {
                     String esc = newVal.replace("\\", "\\\\").replace("\"", "\\\"");
-                    lines.set(i, indent + key + eq + "\"" + esc + "\"" + comment);
+                    rendered = indent + key + eq + "\"" + esc + "\"" + comment;
                 } else {
-                    lines.set(i, indent + key + eq + newVal + comment);
+                    rendered = indent + key + eq + newVal + comment;
                 }
+                lines.set(i, rendered);
                 changes++;
                 System.out.println("Applied " + sec + "." + key + "=" + redact(key, newVal));
                 break;
+            }
+            if (!found && sectionStart >= 0) {
+                // Insert new key at end of section (before next section or EOF)
+                String esc = newVal.replace("\\", "\\\\").replace("\"", "\\\"");
+                boolean asString = !newVal.equals("true") && !newVal.equals("false")
+                        && !newVal.matches("-?\\d+(\\.\\d+)?");
+                String rendered = asString
+                        ? key + " = \"" + esc + "\""
+                        : key + " = " + newVal;
+                lines.add(sectionEnd, rendered);
+                changes++;
+                System.out.println("Added " + sec + "." + key + "=" + redact(key, newVal));
             }
         }
 

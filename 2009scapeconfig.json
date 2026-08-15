@@ -256,6 +256,36 @@
         "Subcategory": "Integrations:analytics:5"
     },
     {
+        "DisplayName": "Discord GE Webhook",
+        "Description": "Discord webhook URL for Grand Exchange related alerts. Leave empty to disable. Create a webhook in your Discord channel settings and paste the full URL here.",
+        "Category": "Server:settings",
+        "Subcategory": "Integrations:analytics:5",
+        "FieldName": "integrations_discord_ge_webhook",
+        "InputType": "password",
+        "ParamFieldName": "integrations_discord_ge_webhook",
+        "DefaultValue": ""
+    },
+    {
+        "DisplayName": "Discord Moderation Webhook",
+        "Description": "Discord webhook URL for moderation / staff alerts (reports, notable moderation events). Leave empty to disable.",
+        "Category": "Server:settings",
+        "Subcategory": "Integrations:analytics:5",
+        "FieldName": "integrations_discord_moderation_webhook",
+        "InputType": "password",
+        "ParamFieldName": "integrations_discord_moderation_webhook",
+        "DefaultValue": ""
+    },
+    {
+        "DisplayName": "OpenRSC Integration Webhook",
+        "Description": "Discord webhook used for OpenRSC-style integration alerts (e.g. special collection events). Leave empty to disable.",
+        "Category": "Server:settings",
+        "Subcategory": "Integrations:analytics:5",
+        "FieldName": "integrations_openrsc_integration_webhook",
+        "InputType": "password",
+        "ParamFieldName": "integrations_openrsc_integration_webhook",
+        "DefaultValue": ""
+    },
+    {
         "DisplayName": "World Name",
         "Description": "Display name of the world shown to players and used in startup logs (e.g. AmiliousScape started in ...).",
         "Category": "World:public",
@@ -697,13 +727,18 @@
     },
     {
         "DisplayName": "Runecrafting Formula Revision",
-        "Description": "Which runecrafting multiple-rune formula to use. 530 = classic; 573 introduced probabilistic multiple runes; 581 extrapolates past 99.",
+        "Description": "Which runecrafting multiple-rune formula to use. 530 = classic (2009-era style); 573 = probabilistic multiple runes (law/death/blood era change); 581 = extrapolates multiples past level 99.",
         "Category": "World:public",
         "FieldName": "world_runecrafting_formula_revision",
-        "InputType": "number",
+        "InputType": "enum",
         "ParamFieldName": "world_runecrafting_formula_revision",
         "DefaultValue": "530",
-        "Subcategory": "Gameplay:sports_esports:3"
+        "Subcategory": "Gameplay:sports_esports:3",
+        "EnumValues": {
+            "530": "530 \u2014 Classic",
+            "573": "573 \u2014 Probabilistic multiples",
+            "581": "581 \u2014 Extrapolate past 99"
+        }
     },
     {
         "DisplayName": "Enhanced Deep Wilderness",
@@ -964,5 +999,111 @@
         "ParamFieldName": "paths_eco_data",
         "DefaultValue": "@data/eco",
         "Subcategory": "Advanced:folder:6"
+    },
+    {
+        "DisplayName": "Bank Booth Quick Open",
+        "Description": "When enabled, interacting with a bank booth opens the bank more directly with less dialogue friction.",
+        "Category": "World:public",
+        "Subcategory": "Gameplay:sports_esports:3",
+        "FieldName": "world_bank_booth_quick_open",
+        "InputType": "checkbox",
+        "ParamFieldName": "world_bank_booth_quick_open",
+        "DefaultValue": "False"
+    },
+    {
+        "DisplayName": "Bank Booth Note Enabled",
+        "Description": "Allows noting items via bank booth-related behavior. Disable for a stricter / more authentic banking feel.",
+        "Category": "World:public",
+        "Subcategory": "Gameplay:sports_esports:3",
+        "FieldName": "world_bank_booth_note_enabled",
+        "InputType": "checkbox",
+        "ParamFieldName": "world_bank_booth_note_enabled",
+        "DefaultValue": "True"
+    },
+    {
+        "DisplayName": "Bank Booth Note (UIM)",
+        "Description": "When bank booth noting is enabled, also allow that noting behavior for Ultimate Ironmen.",
+        "Category": "World:public",
+        "Subcategory": "Gameplay:sports_esports:3",
+        "FieldName": "world_bank_booth_note_uim",
+        "InputType": "checkbox",
+        "ParamFieldName": "world_bank_booth_note_uim",
+        "DefaultValue": "True"
+    },
+    {
+        "DisplayName": "Smart Pathfinder (BFS)",
+        "Description": "Use BFS-style smart pathfinding. Can improve some path choices at the cost of more CPU than the default pathfinder.",
+        "Category": "World:public",
+        "Subcategory": "Gameplay:sports_esports:3",
+        "FieldName": "world_smartpathfinder_bfs",
+        "InputType": "checkbox",
+        "ParamFieldName": "world_smartpathfinder_bfs",
+        "DefaultValue": "False"
+    },
+    {
+        "DisplayName": "Max Pathfind Distance",
+        "Description": "Maximum tile distance the pathfinder will search. Higher values allow longer paths but use more CPU. Default 25.",
+        "Category": "Server:settings",
+        "Subcategory": "Logging & process:article:4",
+        "FieldName": "server_max_pathfind_dist",
+        "InputType": "number",
+        "ParamFieldName": "server_max_pathfind_dist",
+        "DefaultValue": "25",
+        "MinValue": "5",
+        "MaxValue": "200"
+    },
+    {
+        "DisplayName": "Player Stock Clear Interval (minutes)",
+        "Description": "How often (in minutes) player GE/shop stock state is cleared. Default 180 (3 hours).",
+        "Category": "World:public",
+        "Subcategory": "Gameplay:sports_esports:3",
+        "FieldName": "world_playerstock_clear_mins",
+        "InputType": "number",
+        "ParamFieldName": "world_playerstock_clear_mins",
+        "DefaultValue": "180",
+        "MinValue": "1",
+        "MaxValue": "10080"
+    },
+    {
+        "DisplayName": "Player Stock Bot Offers",
+        "Description": "When enabled, player stock can recirculate into bot Grand Exchange offers.",
+        "Category": "World:public",
+        "Subcategory": "Bots:smart_toy:4",
+        "FieldName": "world_playerstock_bot_offers",
+        "InputType": "checkbox",
+        "ParamFieldName": "world_playerstock_bot_offers",
+        "DefaultValue": "True"
+    },
+    {
+        "DisplayName": "Bot Stock Limit",
+        "Description": "Cap on bot-side Grand Exchange stock volume. Default 5000.",
+        "Category": "World:public",
+        "Subcategory": "Bots:smart_toy:4",
+        "FieldName": "world_botstock_limit",
+        "InputType": "number",
+        "ParamFieldName": "world_botstock_limit",
+        "DefaultValue": "5000",
+        "MinValue": "0",
+        "MaxValue": "1000000"
+    },
+    {
+        "DisplayName": "Dragon Axe OSRS Spec",
+        "Description": "When enabled, the dragon axe special attack uses OSRS-style behavior instead of the default 2009-era style.",
+        "Category": "World:public",
+        "Subcategory": "Gameplay:sports_esports:3",
+        "FieldName": "world_dragon_axe_use_osrs_spec",
+        "InputType": "checkbox",
+        "ParamFieldName": "world_dragon_axe_use_osrs_spec",
+        "DefaultValue": "False"
+    },
+    {
+        "DisplayName": "Force Easter Randoms",
+        "Description": "Force Easter holiday random events. Prefer only one forced holiday at a time.",
+        "Category": "World:public",
+        "Subcategory": "Holidays:celebration:6",
+        "FieldName": "world_force_easter_randoms",
+        "InputType": "checkbox",
+        "ParamFieldName": "world_force_easter_randoms",
+        "DefaultValue": "False"
     }
 ]
