@@ -178,21 +178,29 @@ public final class BackupRestore {
             }
 
             if (withConfig) {
-                Path c1 = tmpDir.resolve("config/default.conf");
-                Path c2 = tmpDir.resolve("config/amp-settings.cfg");
-                if (Files.isRegularFile(c1)) {
-                    Files.createDirectories(root.resolve("config"));
-                    Files.copy(c1, root.resolve("config/default.conf"), StandardCopyOption.REPLACE_EXISTING);
-                    System.out.println("Restored config/default.conf");
+                Files.createDirectories(root.resolve("config"));
+                Path bakConf = tmpDir.resolve("config/default.conf");
+                Path bakIni = tmpDir.resolve("config/amp-settings.cfg");
+                Path curConf = root.resolve("config/default.conf");
+                Path curIni = root.resolve("config/amp-settings.cfg");
+
+                // Merge: backup values win for shared keys; keys only on current are kept
+                if (Files.isRegularFile(bakIni)) {
+                    mergeIni(bakIni, curIni);
+                    System.out.println("Merged config/amp-settings.cfg (backup values, kept newer keys)");
                 }
-                if (Files.isRegularFile(c2)) {
-                    Files.createDirectories(root.resolve("config"));
-                    Files.copy(c2, root.resolve("config/amp-settings.cfg"), StandardCopyOption.REPLACE_EXISTING);
-                    System.out.println("Restored config/amp-settings.cfg");
+                if (Files.isRegularFile(bakConf)) {
+                    if (!Files.isRegularFile(curConf)) {
+                        Files.copy(bakConf, curConf, StandardCopyOption.REPLACE_EXISTING);
+                        System.out.println("Restored config/default.conf (no existing file)");
+                    } else {
+                        mergeToml(bakConf, curConf);
+                        System.out.println("Merged config/default.conf (backup values, kept newer keys)");
+                    }
                 }
-                // Reload conf after restore for path resolution
-                if (Files.isRegularFile(root.resolve("config/default.conf"))) {
-                    cfg = ConfigTransformer.parseConf(root.resolve("config/default.conf"));
+
+                if (Files.isRegularFile(curConf)) {
+                    cfg = ConfigTransformer.parseConf(curConf);
                     dataRoot = resolveDataRoot(serverDir, cfg);
                 }
             }
@@ -284,6 +292,7 @@ public final class BackupRestore {
         }
         cmd.add("--single-transaction");
         cmd.add("--routines");
+        cmd.add("--add-drop-table");
         cmd.add("--databases");
         cmd.add(dbname);
 
@@ -383,23 +392,45 @@ public final class BackupRestore {
         // Soft rewrite global -> configured name if present
         String rewritten = DatabaseChecker.rewriteSql(raw, dbname);
 
-        String url = "jdbc:mysql://" + host + ":" + port + "/"
+        String urlDb = "jdbc:mysql://" + host + ":" + port + "/" + dbname
                 + "?useSSL=false&allowPublicKeyRetrieval=true&allowMultiQueries=true";
-        try (Connection c = DriverManager.getConnection(url, user, password)) {
+        try (Connection c = DriverManager.getConnection(urlDb, user, password)) {
             c.setAutoCommit(true);
+            // Clear existing schema so CREATE TABLE in older dumps does not fail
+            dropAllTables(c, dbname);
             executeScript(c, rewritten);
         } catch (SQLException e) {
-            // Retry with database selected
-            String urlDb = "jdbc:mysql://" + host + ":" + port + "/" + dbname
-                    + "?useSSL=false&allowPublicKeyRetrieval=true&allowMultiQueries=true";
-            try (Connection c = DriverManager.getConnection(urlDb, user, password)) {
-                c.setAutoCommit(true);
-                executeScript(c, rewritten);
-            } catch (SQLException e2) {
-                throw new HelperException(4,
-                        "Database restore failed (check user privileges on '" + dbname + "').",
-                        e2.getMessage());
+            throw new HelperException(4,
+                    "Database restore failed (check user privileges on '" + dbname + "').",
+                    e.getMessage() + "\nNeed DROP/CREATE/INSERT on `" + dbname + "`.*, e.g.:\n"
+                            + "  GRANT ALL PRIVILEGES ON `" + dbname + "`.* TO '" + user + "'@'localhost';\n"
+                            + "  FLUSH PRIVILEGES;");
+        }
+    }
+
+    /** Drop every base table in the database so restore can recreate from dump. */
+    private static void dropAllTables(Connection c, String dbname) throws SQLException {
+        try (Statement st = c.createStatement()) {
+            st.execute("SET FOREIGN_KEY_CHECKS=0");
+        }
+        List<String> tables = new ArrayList<>();
+        try (Statement st = c.createStatement();
+             ResultSet rs = st.executeQuery(
+                     "SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_SCHEMA='"
+                             + dbname.replace("'", "''") + "' AND TABLE_TYPE='BASE TABLE'")) {
+            while (rs.next()) {
+                tables.add(rs.getString(1));
             }
+        }
+        try (Statement st = c.createStatement()) {
+            for (String table : tables) {
+                st.execute("DROP TABLE IF EXISTS `" + table + "`");
+                System.out.println("Dropped table `" + table + "` before import");
+            }
+            st.execute("SET FOREIGN_KEY_CHECKS=1");
+        }
+        if (!tables.isEmpty()) {
+            System.out.println("Cleared " + tables.size() + " existing table(s) in '" + dbname + "'");
         }
     }
 
@@ -507,6 +538,145 @@ public final class BackupRestore {
         zos.putNextEntry(e);
         zos.write(json.toString().getBytes(StandardCharsets.UTF_8));
         zos.closeEntry();
+    }
+
+    /**
+     * Merge backup ini into current: backup values overwrite shared keys;
+     * keys present only on current are kept. If current missing, copy backup.
+     */
+    private static void mergeIni(Path backupIni, Path currentIni) throws IOException {
+        Map<String, String> bak = loadFlatIni(backupIni);
+        if (!Files.isRegularFile(currentIni)) {
+            Files.copy(backupIni, currentIni, StandardCopyOption.REPLACE_EXISTING);
+            return;
+        }
+        Map<String, String> cur = loadFlatIni(currentIni);
+        // Preserve order: current keys first, then any backup-only keys
+        Map<String, String> out = new LinkedHashMap<>(cur);
+        int changed = 0;
+        int added = 0;
+        for (Map.Entry<String, String> e : bak.entrySet()) {
+            String prev = out.put(e.getKey(), e.getValue());
+            if (prev == null) {
+                added++;
+            } else if (!prev.equals(e.getValue())) {
+                changed++;
+            }
+        }
+        StringBuilder sb = new StringBuilder();
+        for (Map.Entry<String, String> e : out.entrySet()) {
+            sb.append(e.getKey()).append('=').append(e.getValue()).append('\n');
+        }
+        Files.writeString(currentIni, sb.toString(), StandardCharsets.UTF_8);
+        System.out.println("  ini: " + changed + " updated, " + added + " added from backup, "
+                + (out.size() - bak.size()) + " current-only kept");
+    }
+
+    private static Map<String, String> loadFlatIni(Path ini) throws IOException {
+        Map<String, String> map = new LinkedHashMap<>();
+        if (!Files.isRegularFile(ini)) {
+            return map;
+        }
+        for (String line : Files.readAllLines(ini, StandardCharsets.UTF_8)) {
+            String s = line.strip();
+            if (s.isEmpty() || s.startsWith("#")) {
+                continue;
+            }
+            int eq = s.indexOf('=');
+            if (eq <= 0) {
+                continue;
+            }
+            map.put(s.substring(0, eq).strip(), s.substring(eq + 1).strip());
+        }
+        return map;
+    }
+
+    /**
+     * Merge backup TOML into current: for each section.key in backup, set value on current
+     * (preserving comments when possible). Keys only on current remain.
+     * If a backup key is missing on current, append it to that section.
+     */
+    private static void mergeToml(Path backupConf, Path currentConf) throws IOException {
+        Map<String, String> bak = ConfigTransformer.parseConf(backupConf);
+        List<String> lines = new ArrayList<>(Files.readAllLines(currentConf, StandardCharsets.UTF_8));
+        int updated = 0;
+        int added = 0;
+
+        for (Map.Entry<String, String> e : bak.entrySet()) {
+            String flat = e.getKey(); // section.key
+            int dot = flat.indexOf('.');
+            if (dot <= 0) {
+                continue;
+            }
+            String sec = flat.substring(0, dot);
+            String key = flat.substring(dot + 1);
+            String newVal = e.getValue();
+
+            boolean inSec = false;
+            boolean found = false;
+            int sectionStart = -1;
+            int sectionEnd = lines.size();
+            java.util.regex.Pattern lineRe = java.util.regex.Pattern.compile(
+                    "^([ \\t]*)#?[ \\t]*" + java.util.regex.Pattern.quote(key) + "([ \\t]*=[ \\t]*)(.*)$");
+
+            for (int i = 0; i < lines.size(); i++) {
+                String line = lines.get(i);
+                String stripped = line.strip();
+                if (stripped.startsWith("[") && stripped.endsWith("]")) {
+                    if (inSec) {
+                        sectionEnd = i;
+                        break;
+                    }
+                    inSec = stripped.equals("[" + sec + "]");
+                    if (inSec) {
+                        sectionStart = i;
+                    }
+                    continue;
+                }
+                if (!inSec) {
+                    continue;
+                }
+                java.util.regex.Matcher m = lineRe.matcher(line);
+                if (!m.matches()) {
+                    continue;
+                }
+                found = true;
+                String indent = m.group(1);
+                String eq = m.group(2);
+                String rest = m.group(3);
+                java.util.regex.Matcher vm = java.util.regex.Pattern
+                        .compile("^(\"[^\"]*\"|[^#]*?)([ \\t]*#.*)?$")
+                        .matcher(rest);
+                String comment = "";
+                if (vm.matches() && vm.group(2) != null) {
+                    comment = vm.group(2);
+                }
+                boolean asString = !newVal.equals("true") && !newVal.equals("false")
+                        && !newVal.matches("-?\\d+(\\.\\d+)?");
+                String rendered;
+                if (asString) {
+                    String esc = newVal.replace("\\", "\\\\").replace("\"", "\\\"");
+                    rendered = indent + key + eq + "\"" + esc + "\"" + comment;
+                } else {
+                    rendered = indent + key + eq + newVal + comment;
+                }
+                if (!line.equals(rendered)) {
+                    lines.set(i, rendered);
+                    updated++;
+                }
+                break;
+            }
+            if (!found && sectionStart >= 0) {
+                boolean asString = !newVal.equals("true") && !newVal.equals("false")
+                        && !newVal.matches("-?\\d+(\\.\\d+)?");
+                String esc = newVal.replace("\\", "\\\\").replace("\"", "\\\"");
+                String rendered = asString ? key + " = \"" + esc + "\"" : key + " = " + newVal;
+                lines.add(sectionEnd, rendered);
+                added++;
+            }
+        }
+        Files.write(currentConf, lines, StandardCharsets.UTF_8);
+        System.out.println("  conf: " + updated + " updated, " + added + " added from backup");
     }
 
     private static String escapeJson(String s) {
