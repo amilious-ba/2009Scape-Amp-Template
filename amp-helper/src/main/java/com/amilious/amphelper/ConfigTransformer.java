@@ -190,14 +190,13 @@ public final class ConfigTransformer {
                 String oldCmp = quoted && oldRaw.length() >= 2
                         ? oldRaw.substring(1, oldRaw.length() - 1)
                         : oldRaw;
-                if (oldCmp.equals(newVal) && !line.strip().startsWith("#")) {
+                if (oldCmp.equals(newVal) && !line.strip().startsWith("#")
+                        && !(mustQuoteString(sec, key) && !quoted)) {
                     break;
                 }
-                // Always write as quoted string for webhook/url-like or non-bool/non-numeric
-                boolean asString = !newVal.equals("true") && !newVal.equals("false")
-                        && !newVal.matches("-?\\d+(\\.\\d+)?");
+                boolean asString = shouldWriteQuoted(sec, key, newVal, quoted);
                 String rendered;
-                if (asString || quoted) {
+                if (asString) {
                     String esc = newVal.replace("\\", "\\\\").replace("\"", "\\\"");
                     rendered = indent + key + eq + "\"" + esc + "\"" + comment;
                 } else {
@@ -211,8 +210,7 @@ public final class ConfigTransformer {
             if (!found && sectionStart >= 0) {
                 // Insert new key at end of section (before next section or EOF)
                 String esc = newVal.replace("\\", "\\\\").replace("\"", "\\\"");
-                boolean asString = !newVal.equals("true") && !newVal.equals("false")
-                        && !newVal.matches("-?\\d+(\\.\\d+)?");
+                boolean asString = shouldWriteQuoted(sec, key, newVal, false);
                 String rendered = asString
                         ? key + " = \"" + esc + "\""
                         : key + " = " + newVal;
@@ -222,8 +220,102 @@ public final class ConfigTransformer {
             }
         }
 
+        int coerced = coerceParserStringKeys(lines);
+        changes += coerced;
+
         Files.write(conf, lines, StandardCharsets.UTF_8);
+        if (coerced > 0) {
+            System.out.println("Quoted " + coerced + " conf value(s) required as strings by ServerConfigParser");
+        }
         System.out.println("Finished applying amp-settings.cfg (" + changes + " change" + (changes == 1 ? "" : "s") + ")");
+    }
+
+    /**
+     * Keys that ServerConfigParser reads with getString() even when numeric.
+     * Bare TOML numbers become Long and crash getString (ClassCastException).
+     */
+    private static final java.util.Set<String> FORCE_STRING_KEYS = java.util.Set.of(
+            "database.database_port",
+            "database.database_name",
+            "database.database_username",
+            "database.database_password",
+            "database.database_address",
+            "world.world_id",
+            "world.country_id",
+            "world.name",
+            "world.name_ge",
+            "world.activity",
+            "world.home_location",
+            "world.new_player_location",
+            "world.motw_identifier",
+            "world.motw_text",
+            "server.secret_key",
+            "server.log_level",
+            "server.msip",
+            "server.connectivity_check_url",
+            "server.websocket_tls_keystore_path",
+            "server.websocket_tls_keystore_password",
+            "integrations.discord_ge_webhook",
+            "integrations.discord_moderation_webhook",
+            "integrations.openrsc_integration_webhook",
+            "integrations.discord_invite",
+            "integrations.grafana_log_path"
+    );
+
+    private static boolean mustQuoteString(String sec, String key) {
+        return FORCE_STRING_KEYS.contains(sec + "." + key);
+    }
+
+    private static boolean shouldWriteQuoted(String sec, String key, String newVal, boolean oldWasQuoted) {
+        if (mustQuoteString(sec, key)) {
+            return true;
+        }
+        if (oldWasQuoted) {
+            return true;
+        }
+        if (newVal.equals("true") || newVal.equals("false")) {
+            return false;
+        }
+        // pure numbers stay unquoted only for real numeric TOML fields (getLong/getBoolean)
+        return !newVal.matches("-?\\d+(\\.\\d+)?");
+    }
+
+    /** Fix already-unquoted values that the server parser requires as strings. */
+    private static int coerceParserStringKeys(List<String> lines) {
+        int fixed = 0;
+        String sec = "";
+        Pattern lineRe = Pattern.compile("^([ \\t]*)([A-Za-z0-9_]+)([ \\t]*=[ \\t]*)([^#]+?)([ \\t]*#.*)?$");
+        for (int i = 0; i < lines.size(); i++) {
+            String line = lines.get(i);
+            String stripped = line.strip();
+            if (stripped.startsWith("[") && stripped.endsWith("]")) {
+                sec = stripped.substring(1, stripped.length() - 1).strip();
+                continue;
+            }
+            if (sec.isEmpty() || stripped.startsWith("#")) {
+                continue;
+            }
+            Matcher m = lineRe.matcher(line);
+            if (!m.matches()) {
+                continue;
+            }
+            String key = m.group(2);
+            if (!mustQuoteString(sec, key)) {
+                continue;
+            }
+            String valPart = m.group(4).strip();
+            if (valPart.startsWith("\"") && valPart.endsWith("\"")) {
+                continue;
+            }
+            // strip trailing junk
+            String bare = valPart;
+            String esc = bare.replace("\\", "\\\\").replace("\"", "\\\"");
+            String comment = m.group(5) != null ? m.group(5) : "";
+            lines.set(i, m.group(1) + key + m.group(3) + "\"" + esc + "\"" + comment);
+            fixed++;
+            System.out.println("Coerced " + sec + "." + key + " to quoted string");
+        }
+        return fixed;
     }
 
     static Map<String, String> confToFlat(Path conf) throws IOException {
