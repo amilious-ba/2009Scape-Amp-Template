@@ -388,17 +388,39 @@ public final class BackupRestore {
 
         System.out.println("Importing database dump into '" + dbname + "' as " + user + "...");
 
-        String raw = Files.readString(dumpFile, StandardCharsets.UTF_8);
-        // Soft rewrite global -> configured name if present
-        String rewritten = DatabaseChecker.rewriteSql(raw, dbname);
-
         String urlDb = "jdbc:mysql://" + host + ":" + port + "/" + dbname
-                + "?useSSL=false&allowPublicKeyRetrieval=true&allowMultiQueries=true";
+                + "?useSSL=false&allowPublicKeyRetrieval=true";
+
+        // Drop existing tables first
         try (Connection c = DriverManager.getConnection(urlDb, user, password)) {
             c.setAutoCommit(true);
-            // Clear existing schema so CREATE TABLE in older dumps does not fail
             dropAllTables(c, dbname);
+        } catch (SQLException e) {
+            throw new HelperException(4,
+                    "Could not clear tables in '" + dbname + "' before import.",
+                    e.getMessage() + "\nNeed DROP on `" + dbname + "`.*, e.g.:\n"
+                            + "  GRANT ALL PRIVILEGES ON `" + dbname + "`.* TO '" + user + "'@'localhost';\n"
+                            + "  FLUSH PRIVILEGES;");
+        }
+
+        // Prefer native mysql client (handles mysqldump SET @OLD_* correctly)
+        if (mysqlClientImport(host, port, user, password, dbname, dumpFile)) {
+            return;
+        }
+
+        String raw = Files.readString(dumpFile, StandardCharsets.UTF_8);
+        String rewritten = stripDumpSessionNoise(DatabaseChecker.rewriteSql(raw, dbname));
+
+        try (Connection c = DriverManager.getConnection(urlDb + "&allowMultiQueries=true", user, password)) {
+            c.setAutoCommit(true);
+            try (Statement st = c.createStatement()) {
+                st.execute("SET FOREIGN_KEY_CHECKS=0");
+                st.execute("SET NAMES utf8mb4");
+            }
             executeScript(c, rewritten);
+            try (Statement st = c.createStatement()) {
+                st.execute("SET FOREIGN_KEY_CHECKS=1");
+            }
         } catch (SQLException e) {
             throw new HelperException(4,
                     "Database restore failed (check user privileges on '" + dbname + "').",
@@ -406,6 +428,67 @@ public final class BackupRestore {
                             + "  GRANT ALL PRIVILEGES ON `" + dbname + "`.* TO '" + user + "'@'localhost';\n"
                             + "  FLUSH PRIVILEGES;");
         }
+        System.out.println("JDBC import finished");
+    }
+
+    private static boolean mysqlClientImport(String host, String port, String user, String password,
+                                             String dbname, Path dumpFile) {
+        List<String> cmd = new ArrayList<>();
+        cmd.add("mysql");
+        cmd.add("-h");
+        cmd.add(host);
+        cmd.add("-P");
+        cmd.add(port);
+        cmd.add("-u");
+        cmd.add(user);
+        if (password != null && !password.isEmpty()) {
+            cmd.add("-p" + password);
+        }
+        cmd.add(dbname);
+
+        ProcessBuilder pb = new ProcessBuilder(cmd);
+        pb.redirectInput(dumpFile.toFile());
+        pb.redirectError(ProcessBuilder.Redirect.PIPE);
+        try {
+            Process p = pb.start();
+            String err = new String(p.getErrorStream().readAllBytes(), StandardCharsets.UTF_8);
+            int code = p.waitFor();
+            if (code == 0) {
+                System.out.println("mysql client import OK");
+                return true;
+            }
+            System.out.println("mysql client import failed (exit " + code + ") — JDBC fallback");
+            if (!err.isBlank()) {
+                System.out.println(err.strip());
+            }
+        } catch (Exception e) {
+            System.out.println("mysql client not available (" + e.getMessage() + ") — JDBC fallback");
+        }
+        return false;
+    }
+
+    /**
+     * Strip mysqldump session save/restore lines that break under JDBC
+     * (SET AUTOCOMMIT=@OLD_AUTOCOMMIT when @OLD_* was never applied).
+     */
+    private static String stripDumpSessionNoise(String sql) {
+        StringBuilder out = new StringBuilder();
+        for (String line : sql.split("\n", -1)) {
+            String upper = line.strip().toUpperCase(Locale.ROOT);
+            if (upper.startsWith("SET @OLD_")
+                    || upper.contains("=@OLD_")
+                    || upper.startsWith("SET @@")
+                    || upper.startsWith("/*!40101 SET")
+                    || upper.startsWith("/*!40014")
+                    || upper.startsWith("/*!40111")
+                    || upper.startsWith("/*!40103")
+                    || upper.startsWith("SET TIME_ZONE=")
+                    || upper.startsWith("SET SQL_MODE=")) {
+                continue;
+            }
+            out.append(line).append('\n');
+        }
+        return out.toString();
     }
 
     /** Drop every base table in the database so restore can recreate from dump. */
